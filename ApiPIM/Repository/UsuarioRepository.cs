@@ -26,7 +26,10 @@ namespace ApiPIM.Repository
 
         public void Inativar(int id)
         {
-            InativarUsuario(id);
+            var usuario = _db.Usuarios.FirstOrDefault(a => a.usuarioId == id);
+            usuario!.ativo = 0;
+
+            _db.Usuarios.Update(usuario);
             _db.SaveChanges();
         }
 
@@ -41,6 +44,7 @@ namespace ApiPIM.Repository
             }
             return usuario;
         }
+
         public int Registrar(Usuarios usuario)
         {
             var verificaRegistro = _db.Usuarios.Contains(usuario);
@@ -63,13 +67,6 @@ namespace ApiPIM.Repository
             _db.SaveChanges();
             return novoUsuario.usuarioId;
         }
-        public void InativarUsuario(int id)
-        {
-            var usuario = _db.Usuarios.FirstOrDefault(a => a.usuarioId == id);
-            usuario!.ativo = 0;
-            _db.Usuarios.Update(usuario);
-        }
-
         
     }
 }
