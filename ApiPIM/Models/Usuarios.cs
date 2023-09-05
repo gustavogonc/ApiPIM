@@ -24,6 +24,6 @@ namespace ApiPIM.Models
         public Int16? ativo { get; set; }
         public Int16? administrador { get; set; }
         public string? token { get; set; }
-        public string? expiration_token { get; set; }
+        public DateTime? expiration_token { get; set; }
     }
 }

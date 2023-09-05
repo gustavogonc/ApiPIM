@@ -1,6 +1,7 @@
 ﻿using ApiPIM.Context;
 using ApiPIM.Models;
 using ApiPIM.Services;
+using System.Runtime.CompilerServices;
 
 namespace ApiPIM.Repository
 {
@@ -8,11 +9,13 @@ namespace ApiPIM.Repository
     {
         private readonly AppDbContext _db;
         private readonly SenhaServices _senhaServices;
+        private readonly TokenService _tokenService;
 
-        public UsuarioRepository(AppDbContext db, SenhaServices senhaServices)
+        public UsuarioRepository(AppDbContext db, SenhaServices senhaServices, TokenService tokenService)
         {
             _db = db;
             _senhaServices = senhaServices;
+            _tokenService = tokenService;
         }
         public List<Usuarios> Get()
         {
@@ -42,6 +45,9 @@ namespace ApiPIM.Repository
             {
                 return null;
             }
+
+            Bearer bearer = _tokenService.GeraToken(auth);
+            AtualizarTokenUsuario(usuario, bearer);
             return usuario;
         }
 
@@ -66,6 +72,17 @@ namespace ApiPIM.Repository
             _db.Usuarios.Add(novoUsuario);
             _db.SaveChanges();
             return novoUsuario.usuarioId;
+        }
+
+        public void AtualizarTokenUsuario(Usuarios usuario, Bearer bearer)
+        {
+            var user = _db.Usuarios.SingleOrDefault(u => u.usuarioId == usuario.usuarioId);
+            if(user != null)
+            {
+                user.token = bearer.AccessKey;
+                user.expiration_token = bearer.Validade;
+                _db.SaveChanges();
+            }
         }
         
     }
