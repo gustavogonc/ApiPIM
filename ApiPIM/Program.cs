@@ -4,15 +4,21 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<ApiPIM.Services.SenhaServices>();
+builder.Services.AddScoped<ApiPIM.Services.TokenService>();
+builder.Services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -35,9 +41,8 @@ builder.Services.AddAuthentication(x =>
         };
     });
 
-builder.Services.AddScoped<ApiPIM.Services.SenhaServices>();
-builder.Services.AddScoped<ApiPIM.Services.TokenService>();
-builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+
+
 
 
 builder.Services.AddCors();
@@ -55,7 +60,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.UseAuthorization();
+app.UseAuthentication();
 
 app.UseCors(opt => opt.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 

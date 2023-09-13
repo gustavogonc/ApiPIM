@@ -9,7 +9,7 @@ namespace ApiPIM.Models
         [Key]
         public int usuarioId { get; set; }
         [Required]
-        [StringLength(100, ErrorMessage = "O nome deve ter entre 5 e 20 caracteres", MinimumLength = 5)]
+        [StringLength(100, ErrorMessage = "O nome deve ter entre 5 e 100 caracteres", MinimumLength = 5)]
         public string? nome { get; set; }
 
         [Required]
