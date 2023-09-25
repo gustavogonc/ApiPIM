@@ -24,12 +24,12 @@ namespace ApiPIM.Repository
 
         public Usuarios Get(int id)
         {
-            return _db.Usuarios.FirstOrDefault(a => a.usuarioId == id)!;
+            return _db.Usuarios.FirstOrDefault(a => a.usuario_id == id)!;
         }
 
         public void Inativar(int id)
         {
-            var usuario = _db.Usuarios.FirstOrDefault(a => a.usuarioId == id);
+            var usuario = _db.Usuarios.FirstOrDefault(a => a.usuario_id == id);
             usuario!.ativo = 0;
 
             _db.Usuarios.Update(usuario);
@@ -61,7 +61,7 @@ namespace ApiPIM.Repository
             }
             var novoUsuario = new Usuarios
             {
-                usuarioId = usuario.usuarioId,
+                usuario_id = usuario.usuario_id,
                 nome = usuario.nome,
                 email = usuario.email,
                 senha = _senhaServices.ComputeHash(usuario.senha),
@@ -71,12 +71,12 @@ namespace ApiPIM.Repository
 
             _db.Usuarios.Add(novoUsuario);
             _db.SaveChanges();
-            return novoUsuario.usuarioId;
+            return novoUsuario.usuario_id;
         }
 
         public void AtualizarTokenUsuario(Usuarios usuario, Bearer bearer)
         {
-            var user = _db.Usuarios.SingleOrDefault(u => u.usuarioId == usuario.usuarioId);
+            var user = _db.Usuarios.SingleOrDefault(u => u.usuario_id == usuario.usuario_id);
             if(user != null)
             {
                 user.token = bearer.AccessKey;

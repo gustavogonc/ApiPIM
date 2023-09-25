@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace ApiPIM.Models
 {
-    [Table("funcionario")]
+    [Table("tb_funcionario")]
     public class Funcionarios
     {
         public Funcionarios()

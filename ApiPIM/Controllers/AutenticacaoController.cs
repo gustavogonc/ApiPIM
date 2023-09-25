@@ -38,7 +38,7 @@ namespace ApiPIM.Controllers
                     {
                         usuario = new
                         {
-                            usuario.usuarioId,
+                            usuario.usuario_id,
                             usuario.email,
                             usuario.nome,
                             usuario.administrador,

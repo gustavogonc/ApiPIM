@@ -1,4 +1,5 @@
 ﻿
+using ApiPIM.Models;
 using ApiPIM.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -19,7 +20,7 @@ namespace ApiPIM.Controllers
         }
 
         [HttpGet]
-        public ActionResult Get()
+        public ActionResult GetListFuncionarios()
         {
             var funcionarios = _funcionarioRepository.Get();
 
@@ -28,6 +29,18 @@ namespace ApiPIM.Controllers
                 return NotFound();
             }
             return Ok(funcionarios);
+        }
+
+        [HttpPost]
+        public ActionResult PostNovoFuncionario(Funcionarios funcionarios)
+        {
+            var f = _funcionarioRepository.Add(funcionarios);
+
+            if(f == null)
+            {
+                return BadRequest("Houve um erro ao inserir o funcionario");
+            }
+            return Created("", f);
         }
     }
 }
