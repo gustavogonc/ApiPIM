@@ -7,7 +7,7 @@ namespace ApiPIM.Repository
         List<Usuarios> Get();
         Usuarios Get(int id);
         Usuarios Login(Autenticacao auth);
-        int Registrar(Usuarios usuario);
+        bool Registrar(Usuarios usuario);
         void Inativar(int id);
     }
 }

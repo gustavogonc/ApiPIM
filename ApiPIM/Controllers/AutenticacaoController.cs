@@ -65,6 +65,10 @@ namespace ApiPIM.Controllers
             try
             {
                 var criarUsuario = _repository.Registrar(usuario);
+                if (!criarUsuario)
+                {
+                    return BadRequest("Usuário já cadastrado");
+                }
                 return Created("", usuario);
             }
             catch (Exception ex)

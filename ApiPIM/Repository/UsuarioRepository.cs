@@ -51,17 +51,16 @@ namespace ApiPIM.Repository
             return usuario;
         }
 
-        public int Registrar(Usuarios usuario)
+        public bool Registrar(Usuarios usuario)
         {
-            var verificaRegistro = _db.Usuarios.Contains(usuario);
+            var verificaRegistro = _db.Usuarios.SingleOrDefault(u => u.email == usuario.email);
 
-            if (verificaRegistro)
+            if (verificaRegistro != null)
             {
-                return 0;
+                return false;
             }
             var novoUsuario = new Usuarios
             {
-                usuario_id = usuario.usuario_id,
                 nome = usuario.nome,
                 email = usuario.email,
                 senha = _senhaServices.ComputeHash(usuario.senha),
@@ -71,7 +70,7 @@ namespace ApiPIM.Repository
 
             _db.Usuarios.Add(novoUsuario);
             _db.SaveChanges();
-            return novoUsuario.usuario_id;
+            return true;
         }
 
         public void AtualizarTokenUsuario(Usuarios usuario, Bearer bearer)
