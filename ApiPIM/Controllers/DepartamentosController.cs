@@ -14,8 +14,8 @@ namespace ApiPIM.Controllers
         {
             _departamentosRepository = departamentosRepository;
         }
+
         [HttpPost("novoDepartamento")]
-        
         public async Task<ActionResult> NovoDepartamento(Departamentos dep)
         {
             try
@@ -30,6 +30,26 @@ namespace ApiPIM.Controllers
             catch (Exception ex)
             {
                 return Problem("Ocorreu um erro ao inserir departamento.", null, 500, "Erro novo departamento.", null);
+                throw;
+            }
+        }
+
+        [HttpGet("listarDepartamentos")]
+        public async Task<ActionResult> RetornaDepartamentos()
+        {
+            try
+            {
+                List<Departamentos> dep = await _departamentosRepository.Get();
+                if(dep.Count == 0)
+                {
+                    return NotFound("Não foram encontrados departamentos");
+                }
+                return Ok(dep);
+
+            }
+            catch (Exception ex)
+            {
+                return Problem("Ocorreu um erro ao retornar departamentos.", null, 500, "Erro retornar departamentos.", null);
                 throw;
             }
         }

@@ -17,6 +17,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ApiPIM.Services.SenhaServices>();
 builder.Services.AddScoped<ApiPIM.Services.TokenService>();
+builder.Services.AddScoped<ICargosRepository, CargosRepository>();
 builder.Services.AddScoped<IDepartamentosRepository, DepartamentosRepository>();
 builder.Services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();

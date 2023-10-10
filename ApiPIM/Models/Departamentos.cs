@@ -22,5 +22,7 @@ namespace ApiPIM.Models
 
         public DateTime? data_criacao { get; set; }
 
+        public ICollection<Cargos>? cargos { get; set; }
+
     }
 }
