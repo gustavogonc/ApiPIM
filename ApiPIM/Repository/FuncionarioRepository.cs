@@ -47,7 +47,6 @@ namespace ApiPIM.Repository
             if(f != null)
             {
                 var novoFuncionario = new Funcionarios{
-                    id_funcionario = f.id_funcionario,
                     nome_funcionario = funcionarios.nome_funcionario,
                     cpf = funcionarios.cpf,
                     cargo = funcionarios.cargo,

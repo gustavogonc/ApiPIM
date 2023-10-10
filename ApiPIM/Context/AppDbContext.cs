@@ -12,5 +12,6 @@ namespace ApiPIM.Context
 
         public DbSet<Usuarios> Usuarios { get; set; }
         public DbSet<Funcionarios> Funcionarios { get; set; }
+        public DbSet<Departamentos> Departamentos { get; set; }
     }
 }
