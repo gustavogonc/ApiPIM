@@ -9,6 +9,10 @@ namespace ApiPIM.Models
     [Table("tb_departamento")]
     public class Departamentos
     {
+        public Departamentos()
+        {
+            cargos = new Collection<Cargos>();
+        }
         [Key]
         public int? id_departamento { get; set; }
 

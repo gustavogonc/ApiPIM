@@ -14,11 +14,11 @@ namespace ApiPIM.Repository
 
         public async Task<List<Departamentos>> Get()
         {
-            return await _db.Departamentos.ToListAsync();
+            return await _db.Departamentos.Include(a=> a.cargos).ToListAsync();
         }
         public async Task<Departamentos> Get(int id)
         {
-            return await _db.Departamentos.SingleOrDefaultAsync(a => a.id_departamento == id);
+            return await _db.Departamentos.Include(a => a.cargos).SingleOrDefaultAsync(a => a.id_departamento == id);
         }
 
         public async Task<bool> Novo(Departamentos dep)

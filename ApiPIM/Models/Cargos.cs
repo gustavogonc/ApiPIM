@@ -15,9 +15,11 @@ namespace ApiPIM.Models
         [Required]
         [StringLength(100, ErrorMessage = "A descrição do cargo deve ter entre 15 e 100 caracteres", MinimumLength = 15)]
         public string descricao_cargo { get; set; }
-        public float salario { get; set; }
+        public decimal salario { get; set; }
 
-        public Departamentos departamento_id { get; set; }
+        [ForeignKey("DepartamentoId")]
+        public int? DepartamentoId { get; set; }
+        public Departamentos? Departamento { get; set; }
 
     }
 }
