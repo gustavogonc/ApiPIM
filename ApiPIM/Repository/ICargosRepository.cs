@@ -6,5 +6,6 @@ namespace ApiPIM.Repository
     {
         Task<bool> NovoCargo(Cargos cargo);
         Task<List<Cargos>> Get();
+        Task<List<Cargos>> GetComDepartamentos();
     }
 }

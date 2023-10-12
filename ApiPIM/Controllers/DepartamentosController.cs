@@ -44,8 +44,8 @@ namespace ApiPIM.Controllers
                 {
                     return NotFound("Não foram encontrados departamentos");
                 }
-                return Ok(dep);
 
+                return Ok(dep);
             }
             catch (Exception ex)
             {

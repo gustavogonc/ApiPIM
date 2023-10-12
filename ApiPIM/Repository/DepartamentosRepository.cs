@@ -14,7 +14,11 @@ namespace ApiPIM.Repository
 
         public async Task<List<Departamentos>> Get()
         {
-            return await _db.Departamentos.Include(a=> a.cargos).ToListAsync();
+            return await _db.Departamentos.ToListAsync();
+        }
+        public async Task<List<Departamentos>> GetComCargos()
+        {
+            return await _db.Departamentos.Include(a => a.cargos).ToListAsync();
         }
         public async Task<Departamentos> Get(int id)
         {
