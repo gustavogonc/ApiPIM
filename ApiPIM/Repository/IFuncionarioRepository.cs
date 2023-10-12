@@ -10,5 +10,6 @@ namespace ApiPIM.Repository
         Funcionarios Add(Funcionarios funcionario);
         Funcionarios Update(Funcionarios funcionario);
         bool Delete(int id);
+        IEnumerable<object> FuncionariosCompleto();
     }
 }

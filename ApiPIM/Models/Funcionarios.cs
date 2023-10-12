@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace ApiPIM.Models
 {
-    [Table("tb_funcionario")]
+    [Table("tb_funcionarios")]
     public class Funcionarios
     {
         public Funcionarios()
@@ -21,22 +21,18 @@ namespace ApiPIM.Models
         public string? nome_funcionario { get; set; }
 
         [Required]
-        [StringLength(15, ErrorMessage = "O CPF precisa ter 15 dígitos incluindo pontos e traços")]
+        [StringLength(14, ErrorMessage = "O CPF precisa ter 14 dígitos incluindo pontos e traços")]
         public string? cpf { get; set; }
 
-        [Required]
-        public string? cargo { get; set; }
-
-        [Required]
-        public string? departamento { get; set; }
-
-        [Required]
-        public DateTime? data_cont { get; set; }
-
-        public string? inf_cont { get; set; }
 
         [Required]
         public string? sexo { get; set; }
+
+        [Required]
+        public int? cargo_id { get; set; }
+
+        [Required]
+        public DateTime? data_contratacao { get; set; }
 
         [Required]
         public string? estado_civil { get; set; }

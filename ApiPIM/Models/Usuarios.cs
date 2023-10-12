@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ApiPIM.Models
 {
-    [Table("usuarios")]
+    [Table("tb_usuarios")]
     public class Usuarios
     {
         [Key]

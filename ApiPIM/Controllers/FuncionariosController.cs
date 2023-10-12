@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApiPIM.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[Authorize(AuthenticationSchemes = "Bearer")]
     [ApiController]
     public class FuncionariosController : ControllerBase
     {
@@ -41,6 +41,29 @@ namespace ApiPIM.Controllers
                 return BadRequest("Houve um erro ao inserir o funcionario");
             }
             return Created("", f);
+        }
+
+        [HttpGet]
+        [Route("dadosFuncionarioCompleto")]
+        public async Task<ActionResult> RetornaDadosCompletos()
+        {
+            try
+            {
+                var infos = _funcionarioRepository.FuncionariosCompleto();
+
+                if (infos == null)
+                {
+                    return NotFound("Nenhum dado encontrado.");
+                }
+                return Ok(infos);
+
+            }
+            catch (Exception ex)
+            {
+
+                return Problem("Ocorreu um erro ao retornar dados completos dos funcionários.", null, 500, "Erro retornar funcionários.", null);
+                throw;
+            }
         }
     }
 }
