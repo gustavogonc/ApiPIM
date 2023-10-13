@@ -141,5 +141,60 @@ namespace ApiPIM.Repository
 
             return groupedResults;
         }
+
+        public async Task<bool> NovoFuncionario(FuncionarioDTO fun)
+        {
+            try
+            {
+                var funcionario = new Funcionarios
+                {
+                    nome_funcionario = fun.nome,
+                    cpf = fun.cpf,
+                    sexo = fun.sexo,
+                    cargo_id = fun.cargo_id,
+                    data_contratacao = fun.data_contratacao,
+                    estado_civil = fun.estado_civil,
+                };
+
+                await _db.Funcionarios.AddAsync(funcionario);
+                await _db.SaveChangesAsync();
+
+                var endereco = new Endereco
+                {
+                    funcionario_id = funcionario.id_funcionario,
+                    tipo_endereco = fun.tipo_endereco,
+                    rua = fun.rua,
+                    cep = fun.cep,
+                    bairro = fun.bairro,
+                    num_endereco = fun.num_endereco,
+                    cidade = fun.cidade,
+                    uf_estado = fun.uf_estado,
+                    data_cadastro = DateTime.Now
+                };
+
+                await _db.Enderecos.AddAsync(endereco);
+                await _db.SaveChangesAsync();
+
+                var telefone = new ContatoFuncionario
+                {
+                    funcionario_id = funcionario.id_funcionario,
+                    tipo_telefone = fun.tipo_telefone,
+                    numero_contato = fun.numero_contato,
+                    data_cadastro = DateTime.Now
+                };
+
+                await _db.ContatosFuncionario.AddAsync(telefone);
+                await _db.SaveChangesAsync();
+
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+                throw;
+            }
+        }
     }
 }

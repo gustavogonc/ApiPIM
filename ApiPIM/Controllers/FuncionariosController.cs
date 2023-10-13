@@ -31,18 +31,6 @@ namespace ApiPIM.Controllers
             return Ok(funcionarios);
         }
 
-        [HttpPost]
-        public ActionResult PostNovoFuncionario(Funcionarios funcionarios)
-        {
-            var f = _funcionarioRepository.Add(funcionarios);
-
-            if(f == null)
-            {
-                return BadRequest("Houve um erro ao inserir o funcionario");
-            }
-            return Created("", f);
-        }
-
         [HttpGet]
         [Route("dadosFuncionarioCompleto")]
         public async Task<ActionResult> RetornaDadosCompletos()
@@ -65,5 +53,27 @@ namespace ApiPIM.Controllers
                 throw;
             }
         }
+
+        [HttpPost]
+        [Route("novoFuncionario")]
+        public async Task<ActionResult> PostNovoFuncionario(FuncionarioDTO funcionarios)
+        {
+            try
+            {
+                bool f = await _funcionarioRepository.NovoFuncionario(funcionarios);
+
+                if (f == false)
+                {
+                    return BadRequest("Houve um erro ao inserir o funcionario");
+                }
+                return Created("", f);
+            }
+            catch (Exception ex)
+            {
+                return Problem("Ocorreu um erro ao inserir funcionário.", null, 500, "Erro inserir funcionário.", null);
+                throw;
+            }
+        }
+        
     }
 }
