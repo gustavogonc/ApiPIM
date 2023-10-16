@@ -88,6 +88,10 @@ namespace ApiPIM.Repository
                         from fun in end_fun.DefaultIfEmpty()
                         join tel in _db.ContatosFuncionario on f.id_funcionario equals tel.funcionario_id into tel_fun
                         from fun_tel in tel_fun.DefaultIfEmpty()
+                        join car in _db.Cargos on f.cargo_id equals car.id_cargo into car_fun
+                        from cargo in car_fun.DefaultIfEmpty()
+                        join dep in _db.Departamentos on cargo.DepartamentoId equals dep.id_departamento into dep_carg
+                        from departamento in dep_carg.DefaultIfEmpty()
                         select (new
                         {
                             f.id_funcionario,
@@ -95,6 +99,8 @@ namespace ApiPIM.Repository
                             f.sexo,
                             f.estado_civil,
                             f.cargo_id,
+                            departamento.nome_departamento,
+                            cargo.nome_cargo,
                             f.data_contratacao,
                             fun.tipo_endereco,
                             fun.rua,
@@ -115,6 +121,8 @@ namespace ApiPIM.Repository
                                 sexo = g.First().sexo,
                                 estado_civil = g.First().estado_civil,
                                 cargo_id = g.First().cargo_id,
+                                departamento = g.First().nome_departamento,
+                                cargo = g.First().nome_cargo,
                                 data_contratacao = g.First().data_contratacao,
                             },
                             Enderecos = g
