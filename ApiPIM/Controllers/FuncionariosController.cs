@@ -74,6 +74,28 @@ namespace ApiPIM.Controllers
                 throw;
             }
         }
-        
+
+        [HttpPut]
+        [Route("atualizaFuncionario/{id:int}")]
+        public async Task<ActionResult> PutAtualizaFuncionario(int id, FuncionarioDTO func)
+        {
+            try
+            {
+                bool f = await _funcionarioRepository.AtualizaFuncionario(id, func);
+
+                if(f == false)
+                {
+                    return BadRequest("Houve um erro ao atualizar o funcionário");
+                }
+
+                return Ok("Atualizado com sucesso!");
+            }
+            catch (Exception)
+            {
+
+                return Problem("Ocorreu um erro ao editar funcionário.", null, 500, "Erro editar funcionário.", null);
+                throw;
+            }
+        }
     }
 }

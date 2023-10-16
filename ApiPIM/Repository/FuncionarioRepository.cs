@@ -144,7 +144,7 @@ namespace ApiPIM.Repository
                                 })
                                 .Distinct() // Para evitar contatos duplicados
                                 .ToList()
-                        }).ToList();
+                        }).OrderBy(g => g.Funcionario.nome_funcionario).ToList();
 
 
             return groupedResults;
@@ -203,6 +203,60 @@ namespace ApiPIM.Repository
                 return false;
                 throw;
             }
+        }
+
+        public async Task<bool> AtualizaFuncionario(int id, FuncionarioDTO fun)
+        {
+            var funcionario = await _db.Funcionarios.SingleOrDefaultAsync(f => f.id_funcionario == id);
+
+            if(funcionario == null)
+            {
+                return false;
+            }
+
+            var funcionarioAtt = new Funcionarios
+            {
+                id_funcionario = funcionario.id_funcionario,
+                nome_funcionario = fun.nome,
+                cpf = fun.cpf,
+                sexo = fun.sexo,
+                cargo_id = fun.cargo_id,
+                data_contratacao = fun.data_contratacao,
+                estado_civil = fun.estado_civil,
+            };
+
+            _db.Funcionarios.Update(funcionario);
+            await _db.SaveChangesAsync();
+
+            var endereco = new Endereco
+            {
+                funcionario_id = funcionario.id_funcionario,
+                tipo_endereco = fun.tipo_endereco,
+                rua = fun.rua,
+                cep = fun.cep,
+                bairro = fun.bairro,
+                num_endereco = fun.num_endereco,
+                cidade = fun.cidade,
+                uf_estado = fun.uf_estado,
+                data_cadastro = DateTime.Now
+            };
+
+            _db.Enderecos.Update(endereco);
+            await _db.SaveChangesAsync();
+
+            var telefone = new ContatoFuncionario
+            {
+                funcionario_id = funcionario.id_funcionario,
+                tipo_telefone = fun.tipo_telefone,
+                numero_contato = fun.numero_contato,
+                data_cadastro = DateTime.Now
+            };
+
+            _db.ContatosFuncionario.Update(telefone);
+            await _db.SaveChangesAsync();
+
+            return true;
+
         }
     }
 }

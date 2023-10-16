@@ -12,5 +12,6 @@ namespace ApiPIM.Repository
         bool Delete(int id);
         IEnumerable<object> FuncionariosCompleto();
         Task<bool> NovoFuncionario(FuncionarioDTO fun);
+        Task<bool> AtualizaFuncionario(int id, FuncionarioDTO fun);
     }
 }
