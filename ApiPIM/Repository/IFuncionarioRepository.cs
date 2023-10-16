@@ -13,5 +13,6 @@ namespace ApiPIM.Repository
         IEnumerable<object> FuncionariosCompleto();
         Task<bool> NovoFuncionario(FuncionarioDTO fun);
         Task<bool> AtualizaFuncionario(int id, FuncionarioDTO fun);
+        IEnumerable<object> FuncionarioCompleto(int id);
     }
 }

@@ -54,6 +54,29 @@ namespace ApiPIM.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("dadosFuncionarioCompleto/{id:int}")]
+        public async Task<ActionResult> RetornaDadosCompletos(int id)
+        {
+            try
+            {
+                var infos = _funcionarioRepository.FuncionarioCompleto(id);
+
+                if (infos == null)
+                {
+                    return NotFound("Nenhum dado encontrado.");
+                }
+                return Ok(infos);
+
+            }
+            catch (Exception ex)
+            {
+
+                return Problem("Ocorreu um erro ao retornar dados completos do funcionário.", null, 500, "Erro retornar funcionário.", null);
+                throw;
+            }
+        }
+
         [HttpPost]
         [Route("novoFuncionario")]
         public async Task<ActionResult> PostNovoFuncionario(FuncionarioDTO funcionarios)
