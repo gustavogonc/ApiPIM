@@ -50,7 +50,26 @@ namespace ApiPIM.Controllers
             catch (Exception ex)
             {
                 return Problem("Ocorreu um erro ao retornar departamentos.", null, 500, "Erro retornar departamentos.", null);
-                throw;
+            }
+        }
+
+        [HttpGet("departamentoId/{id:int}")]
+        public async Task<ActionResult> RetornaDepartamento(int id)
+        {
+            try
+            {
+                Departamentos dep = await _departamentosRepository.Get(id);
+
+                if (dep == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(dep);
+            }
+            catch (Exception ex)
+            {
+                return Problem("Ocorreu um erro ao retornar departamento por id.", null, 500, "Erro retornar departamento.", null);
             }
         }
     }

@@ -15,6 +15,43 @@ namespace ApiPIM.Controllers
             _cargosRepository = cargosRepository;
         }
 
+        [HttpGet]
+        [Route("retornaCargos")]
+        public async Task<ActionResult> RetornarCargos()
+        {
+            try
+            {
+                List<Cargos> lista = await _cargosRepository.Get();
+
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return Problem("Ocorreu um erro ao retornar cargos.", null, 500, "Erro retornar cargos.", null);
+            }
+        }
+
+        [HttpGet]
+        [Route("retornaCargo/{id:int}")]
+        public async Task<ActionResult> RetornarCargo(int id)
+        {
+            try
+            {
+                var cargo = await _cargosRepository.Get(id);
+
+                if(cargo == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(cargo);
+            }
+            catch (Exception ex)
+            {
+                return Problem("Ocorreu um erro ao retornar cargos.", null, 500, "Erro retornar cargos.", null);
+            }
+        }
+
         [HttpPost]
         [Route("novoCargo")]
         public async Task<ActionResult> PostNovoCargo(Cargos cargo)
@@ -35,20 +72,5 @@ namespace ApiPIM.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("retornaCargos")]
-        public async Task<ActionResult> RetornarCargos()
-        {
-            try
-            {
-                List<Cargos> lista = await _cargosRepository.Get();
-
-                return Ok(lista);
-            }
-            catch (Exception ex)
-            {
-                return Problem("Ocorreu um erro ao retornar cargos.", null, 500, "Erro retornar cargos.", null);
-            }
-        }
     }
 }

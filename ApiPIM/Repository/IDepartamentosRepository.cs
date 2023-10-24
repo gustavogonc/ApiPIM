@@ -11,5 +11,6 @@ namespace ApiPIM.Repository
         Task<Departamentos> Atualizar(int id, Departamentos departamento);
         Task<Departamentos> Deletar(int id);
 
+
     }
 }

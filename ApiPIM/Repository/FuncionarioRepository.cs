@@ -16,18 +16,18 @@ namespace ApiPIM.Repository
 
         public List<Funcionarios> Get()
         {
-            return _db.Funcionarios.Include(a => a.endereco).ToList();
+            return _db.Funcionarios.ToList();
         }
         public Funcionarios GetById(int id)
         {
-            Funcionarios funcionario = _db.Funcionarios.Include(a => a.endereco).SingleOrDefault(a => a.id_funcionario == id)!;
+            Funcionarios funcionario = _db.Funcionarios.SingleOrDefault(a => a.id_funcionario == id)!;
 
             return funcionario!;
         }
 
         public Funcionarios GetByName(string name)
         {
-            Funcionarios funcionario = _db.Funcionarios.Include(a => a.endereco).SingleOrDefault(a => a.nome_funcionario == name)!;
+            Funcionarios funcionario = _db.Funcionarios.SingleOrDefault(a => a.nome_funcionario == name)!;
 
             return funcionario!;
         }

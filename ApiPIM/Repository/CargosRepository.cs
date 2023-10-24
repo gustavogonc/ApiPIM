@@ -16,6 +16,24 @@ namespace ApiPIM.Repository
             return await _db.Cargos.ToListAsync();
         }
 
+        public async Task<IQueryable> Get(int id)
+        {
+            var cargo = from c in _db.Cargos
+                        join d in _db.Departamentos on c.DepartamentoId equals d.id_departamento into car_dep
+                        from dept in car_dep.DefaultIfEmpty()
+                        where c.id_cargo == id
+                        select (new
+                        {
+                            c.id_cargo,
+                            c.nome_cargo,
+                            c.descricao_cargo,
+                            c.salario,
+                            dept.nome_departamento
+                        });
+
+            return cargo;
+        }
+
         public async Task<List<Cargos>> GetComDepartamentos()
         {
             return await _db.Cargos.Include(a => a.Departamento).ToListAsync();
