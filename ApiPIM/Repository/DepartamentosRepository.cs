@@ -46,17 +46,20 @@ namespace ApiPIM.Repository
             return true;
 
         }
-        public async Task<Departamentos> Atualizar(int id, Departamentos departamento)
+        public async Task<Departamentos> Atualizar(Departamentos departamento)
         {
             Departamentos dep = new Departamentos();
 
-            var resultado = await _db.Departamentos.SingleOrDefaultAsync(a => a.id_departamento == id);
+            var resultado = await _db.Departamentos.SingleOrDefaultAsync(a => a.id_departamento == departamento.id_departamento);
             if(resultado == null)
             {
                 return dep;
             }
 
             dep = resultado;
+
+            resultado.nome_departamento = departamento.nome_departamento;
+            resultado.descricao_departamento = departamento.descricao_departamento;
 
             _db.Departamentos.Update(dep);
             await _db.SaveChangesAsync();

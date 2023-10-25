@@ -15,32 +15,13 @@ namespace ApiPIM.Controllers
             _departamentosRepository = departamentosRepository;
         }
 
-        [HttpPost("novoDepartamento")]
-        public async Task<ActionResult> NovoDepartamento(Departamentos dep)
-        {
-            try
-            {
-                bool cadastro = await _departamentosRepository.Novo(dep);
-                if (!cadastro)
-                {
-                    return BadRequest("Cadastro já existente.");
-                }
-                return Created("", dep);
-            }
-            catch (Exception ex)
-            {
-                return Problem("Ocorreu um erro ao inserir departamento.", null, 500, "Erro novo departamento.", null);
-                throw;
-            }
-        }
-
         [HttpGet("listarDepartamentos")]
         public async Task<ActionResult> RetornaDepartamentos()
         {
             try
             {
                 List<Departamentos> dep = await _departamentosRepository.Get();
-                if(dep.Count == 0)
+                if (dep.Count == 0)
                 {
                     return NotFound("Não foram encontrados departamentos");
                 }
@@ -70,6 +51,45 @@ namespace ApiPIM.Controllers
             catch (Exception ex)
             {
                 return Problem("Ocorreu um erro ao retornar departamento por id.", null, 500, "Erro retornar departamento.", null);
+            }
+        }
+
+        [HttpPut("atualizaDepartamento")]
+        public async Task<ActionResult> AtualizaDepartamento(Departamentos dep)
+        {
+            try
+            {
+                Departamentos depart = await _departamentosRepository.Atualizar(dep);
+
+                if(depart == null)
+                {
+                    return BadRequest();
+                }
+
+                return Ok();
+
+            }
+            catch (Exception ex)
+            {
+                return Problem("Ocorreu um erro ao editar departamento.", null, 500, "Erro editar departamento.", null);
+            }
+        }
+
+        [HttpPost("novoDepartamento")]
+        public async Task<ActionResult> NovoDepartamento(Departamentos dep)
+        {
+            try
+            {
+                bool cadastro = await _departamentosRepository.Novo(dep);
+                if (!cadastro)
+                {
+                    return BadRequest("Cadastro já existente.");
+                }
+                return Created("", dep);
+            }
+            catch (Exception ex)
+            {
+                return Problem("Ocorreu um erro ao inserir departamento.", null, 500, "Erro novo departamento.", null);
             }
         }
     }

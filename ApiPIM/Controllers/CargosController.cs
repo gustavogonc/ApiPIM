@@ -52,6 +52,26 @@ namespace ApiPIM.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("atualizaCargo")]
+        public async Task<ActionResult> AtualizaCargo([FromBody] Cargos cargo)
+        {
+            try
+            {
+                bool result = await _cargosRepository.AtualizaCargo(cargo);
+                if (!result)
+                {
+                    return BadRequest("Não foi possível atulizar o cargo!");
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return Problem("Ocorreu um erro ao atualizar cargo.", null, 500, "Erro atualizar cargos.", null);
+            }
+        }
+
         [HttpPost]
         [Route("novoCargo")]
         public async Task<ActionResult> PostNovoCargo(Cargos cargo)
@@ -71,6 +91,5 @@ namespace ApiPIM.Controllers
                 return Problem("Ocorreu um erro ao cadastrar cargo.", null, 500, "Erro cadastrar cargos.", null);
             }
         }
-
     }
 }

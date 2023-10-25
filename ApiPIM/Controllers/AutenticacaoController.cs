@@ -42,7 +42,9 @@ namespace ApiPIM.Controllers
                             usuario.email,
                             usuario.nome,
                             usuario.administrador,
-                            usuario.ativo
+                            usuario.ativo,
+                            usuario.token,
+                            usuario.expiration_token
                         }
                     });
                 }

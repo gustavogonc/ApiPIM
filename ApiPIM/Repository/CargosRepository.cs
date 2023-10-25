@@ -28,7 +28,8 @@ namespace ApiPIM.Repository
                             c.nome_cargo,
                             c.descricao_cargo,
                             c.salario,
-                            dept.nome_departamento
+                            dept.nome_departamento,
+                            dept.id_departamento
                         });
 
             return cargo;
@@ -37,6 +38,24 @@ namespace ApiPIM.Repository
         public async Task<List<Cargos>> GetComDepartamentos()
         {
             return await _db.Cargos.Include(a => a.Departamento).ToListAsync();
+        }
+
+        public async Task<bool> AtualizaCargo(Cargos cargo)
+        {
+            var result = await _db.Cargos.SingleOrDefaultAsync(a => a.id_cargo == cargo.id_cargo);
+            if(result == null)
+            {
+                return false;
+            }
+
+            result.nome_cargo = cargo.nome_cargo;
+            result.descricao_cargo = cargo.descricao_cargo;
+            result.salario = cargo.salario;
+            result.DepartamentoId = cargo.DepartamentoId;
+
+            _db.Cargos.Update(result);
+            await _db.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> NovoCargo(Cargos cargo)
