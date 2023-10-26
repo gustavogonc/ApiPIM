@@ -1,8 +1,14 @@
 ﻿namespace ApiPIM.Models
 {
-    public class Autenticacao
+    public class HistPagamentoModel
     {
-        public string? email { get; set; }
-        public string? senha { get; set; }
+        public int IdHist { get; set; }
+        public int IdFuncionario { get; set; }
+        public DateTime DataPagamento { get; set; }
+        public decimal SalarioBase { get; set; }
+        public TimeSpan HoraEx { get; set; }
+        public float Beneficios { get; set; }
+        public float TotalLiq { get; set; }
     }
+
 }
