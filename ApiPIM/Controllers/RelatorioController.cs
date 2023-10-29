@@ -49,11 +49,13 @@ namespace ApiPIM.Controllers
             calculaFGTS(funcionarioDeducoesFiltrados);
             funcionarioDeducoesFiltrados.FGTS = Math.Round(funcionarioDeducoesFiltrados.FGTS, 2);
 
+            CalculaINSS(funcionarioDeducoesFiltrados);
+            funcionarioDeducoesFiltrados.INSS = Math.Round(funcionarioDeducoesFiltrados.INSS, 2);
+
             calculaIR(funcionarioDeducoesFiltrados);
             funcionarioDeducoesFiltrados.IR = Math.Round(funcionarioDeducoesFiltrados.IR, 2);
 
-            CalculaINSS(funcionarioDeducoesFiltrados);
-            funcionarioDeducoesFiltrados.INSS = Math.Round(funcionarioDeducoesFiltrados.INSS, 2);
+           
 
             calculoDesconto(funcionarioDeducoesFiltrados);
             funcionarioDeducoesFiltrados.Descontos = Math.Round(funcionarioDeducoesFiltrados.Descontos, 2);
@@ -94,22 +96,22 @@ namespace ApiPIM.Controllers
 
         private static void calculaIR(FuncionarioDeducoes funcionarioDeducoesFiltrados)
         {
-            if (funcionarioDeducoesFiltrados.Salario > 1903.98M && funcionarioDeducoesFiltrados.Salario < 2826.66M)
+            if (funcionarioDeducoesFiltrados.Salario > 2112.01M && funcionarioDeducoesFiltrados.Salario < 2826.66M)
             {
-                funcionarioDeducoesFiltrados.IR = funcionarioDeducoesFiltrados.Salario * 0.075M;
+                funcionarioDeducoesFiltrados.IR = (funcionarioDeducoesFiltrados.Salario - funcionarioDeducoesFiltrados.INSS) * 0.075M - 158.40M;
 
             }
             else if (funcionarioDeducoesFiltrados.Salario > 2826.65M && funcionarioDeducoesFiltrados.Salario < 3751.06M)
             {
-                funcionarioDeducoesFiltrados.IR = funcionarioDeducoesFiltrados.Salario * 0.15M;
+                funcionarioDeducoesFiltrados.IR = (funcionarioDeducoesFiltrados.Salario - funcionarioDeducoesFiltrados.INSS) * 0.15M - 370.40M;
             }
             else if (funcionarioDeducoesFiltrados.Salario > 3751.05M && funcionarioDeducoesFiltrados.Salario < 4664.69M)
             {
-                funcionarioDeducoesFiltrados.IR = funcionarioDeducoesFiltrados.Salario * 0.225M;
+                funcionarioDeducoesFiltrados.IR = (funcionarioDeducoesFiltrados.Salario - funcionarioDeducoesFiltrados.INSS) * 0.225M - 651.73M;
             }
             else if (funcionarioDeducoesFiltrados.Salario > 4664.68M)
             {
-                funcionarioDeducoesFiltrados.IR = funcionarioDeducoesFiltrados.Salario * 0.275M;
+                funcionarioDeducoesFiltrados.IR = (funcionarioDeducoesFiltrados.Salario - funcionarioDeducoesFiltrados.INSS) * 0.275M - 884.96M;
             }
             else
             {
