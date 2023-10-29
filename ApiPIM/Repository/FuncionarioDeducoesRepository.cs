@@ -8,16 +8,18 @@ namespace ApiPIM.Repository
 
         public List<FuncionarioDeducoes> ObterFuncionarioDeducoes()
         {
-            string connectionString = @"Data Source=JESSICAOM-NB\MSSQLSERVER01;Initial Catalog=Folha_Pagamento;Integrated Security=True;Encrypt=False";
+            string connectionString = @"Data Source=20.206.249.21,1433;Initial Catalog=PIM;User ID=sa1;Password=Pim123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;";
 
             List<FuncionarioDeducoes> funcionarioDeducoesList = new List<FuncionarioDeducoes>();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = @"select f.nome_funcionario, f.cpf, f.cargo, f.departamento,
-                                a.VR, a.VT, a.salario, a.mes
+                string query = @"select f.nome_funcionario, f.cpf, c.nome_cargo, d.nome_departamento,
+                                a.VR, a.VT, c.salario, a.mes
                                 from tb_deducoes a
-                                inner join tb_funcionario f on f.id_funcionario = a.id_funcionario";
+                                inner join tb_funcionarios f on f.id_funcionario = a.id_funcionario
+                                inner join tb_cargos c on f.cargo_id = c.id_cargo
+                                inner join tb_departamento d on c.DepartamentoId = d.id_departamento";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -46,16 +48,16 @@ namespace ApiPIM.Repository
             return funcionarioDeducoesList;
         }
 
-      
+
         public List<Funcionario> ObterFuncionariosBasicos()
         {
-            string connectionString = @"Data Source=JESSICAOM-NB\MSSQLSERVER01;Initial Catalog=Folha_Pagamento;Integrated Security=True;Encrypt=False";
+            string connectionString = @"Data Source=20.206.249.21,1433;Initial Catalog=PIM;User ID=sa1;Password=Pim123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;";
 
             List<Funcionario> funcionarios = new List<Funcionario>();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = @"SELECT nome_funcionario, cpf FROM tb_funcionario";
+                string query = @"SELECT nome_funcionario, cpf FROM tb_funcionarios";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {

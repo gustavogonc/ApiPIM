@@ -16,7 +16,7 @@ namespace ApiPIM.Repository
 
             return todosPagamentos;
         }
-    
+
 
 
 
@@ -24,15 +24,17 @@ namespace ApiPIM.Repository
 
         public List<HistPagamentoModel> ObterPagamentos()
         {
-            string connectionString = @"Data Source=JESSICAOM-NB\MSSQLSERVER01;Initial Catalog=Folha_Pagamento;Integrated Security=True;Encrypt=False";
+            string connectionString = @"Data Source=20.206.249.21,1433;Initial Catalog=PIM;User ID=sa1;Password=Pim123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;";
 
 
             List<HistPagamentoModel> pagamentos = new List<HistPagamentoModel>();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = @"SELECT [id_hist], [id_funcionario], [data_pagamento], [salario_base], [hora_ex], [beneficios], [total_liq] 
-                         FROM [Folha_Pagamento].[dbo].[tb_histpagment]";
+                string query = @"SELECT [id_hist], h.[id_funcionario], [data_pagamento], c.salario, [hora_ex], [beneficios]
+                         FROM [PIM].[dbo].[tb_histpagment] h
+                         inner join tb_funcionarios f on h.id_funcionario = f.id_funcionario
+                        inner join tb_cargos c on f.cargo_id = c.id_cargo ";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -48,8 +50,7 @@ namespace ApiPIM.Repository
                                 DataPagamento = reader.GetDateTime(2),
                                 SalarioBase = reader.GetDecimal(3),
                                 HoraEx = reader.GetTimeSpan(4),
-                                Beneficios = (float)reader.GetDouble(5),
-                                TotalLiq = (float)reader.GetDouble(6)
+                                Beneficios = (float)reader.GetDouble(5)
                             };
                             pagamentos.Add(pagamento);
                         }
@@ -67,7 +68,7 @@ namespace ApiPIM.Repository
 
         public List<DashboardModel> ObterPagamentoMensal()
         {
-            string connectionString = @"Data Source=JESSICAOM-NB\MSSQLSERVER01;Initial Catalog=Folha_Pagamento;Integrated Security=True;Encrypt=False";
+            string connectionString = @"Data Source=20.206.249.21,1433;Initial Catalog=PIM;User ID=sa1;Password=Pim123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;";
 
 
             List<DashboardModel> pagamentos = new List<DashboardModel>();
@@ -108,20 +109,21 @@ namespace ApiPIM.Repository
 
         public List<DashboardModel> ObterPagamentosDepartamento()
         {
-            string connectionString = @"Data Source=JESSICAOM-NB\MSSQLSERVER01;Initial Catalog=Folha_Pagamento;Integrated Security=True;Encrypt=False";
+            string connectionString = @"Data Source=20.206.249.21,1433;Initial Catalog=PIM;User ID=sa1;Password=Pim123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;";
 
 
             List<DashboardModel> pagamentos = new List<DashboardModel>();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = @"SELECT f.departamento,
+                string query = @"SELECT d.nome_departamento,
                                    
                                     SUM(total_liq) AS somatoria_total_liquido
                                 FROM [dbo].[tb_histpagment] h
-								inner join tb_funcionario f on h.id_funcionario = f.id_funcionario
-
-                                GROUP BY f.departamento
+								inner join tb_funcionarios f on h.id_funcionario = f.id_funcionario
+                                inner join tb_cargos c on f.cargo_id = c.id_cargo
+                                inner join tb_departamento d on c.DepartamentoId = d.id_departamento
+                                GROUP BY d.nome_departamento
                                 ";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
