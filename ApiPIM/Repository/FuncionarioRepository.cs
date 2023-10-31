@@ -207,56 +207,73 @@ namespace ApiPIM.Repository
 
         public async Task<bool> AtualizaFuncionario(int id, FuncionarioDTO fun)
         {
-            var funcionario = await _db.Funcionarios.SingleOrDefaultAsync(f => f.id_funcionario == id);
+            using var transaction = _db.Database.BeginTransaction();
 
-            if(funcionario == null)
+            try
             {
-                return false;
+                var funcionario = await _db.Funcionarios.SingleOrDefaultAsync(f => f.id_funcionario == id);
+
+                if (funcionario == null)
+                {
+                    return false;
+                }
+
+                funcionario.nome_funcionario = fun.nome;
+                funcionario.cpf = fun.cpf;
+                funcionario.sexo = fun.sexo;
+                funcionario.cargo_id = fun.cargo_id;
+                funcionario.data_contratacao = fun.data_contratacao;
+                funcionario.estado_civil = fun.estado_civil;
+
+                _db.Funcionarios.Update(funcionario);
+                await _db.SaveChangesAsync();
+
+                var endereco = await _db.Enderecos.SingleOrDefaultAsync(e => e.funcionario_id == funcionario.id_funcionario);
+
+                if (endereco == null)
+                {
+                    endereco = new Endereco
+                    {
+                        funcionario_id = funcionario.id_funcionario
+                    };
+                }
+                endereco.tipo_endereco = fun.tipo_endereco;
+                endereco.rua = fun.rua;
+                endereco.cep = fun.cep;
+                endereco.bairro = fun.bairro;
+                endereco.num_endereco = fun.num_endereco;
+                endereco.cidade = fun.cidade;
+                endereco.uf_estado = fun.uf_estado;
+                endereco.data_cadastro = DateTime.Now;
+
+                _db.Enderecos.Update(endereco);
+                await _db.SaveChangesAsync();
+
+                var telefone = await _db.ContatosFuncionario.SingleOrDefaultAsync(t => t.funcionario_id == funcionario.id_funcionario);
+
+                if (telefone == null)
+                {
+                    telefone = new ContatoFuncionario
+                    {
+                        funcionario_id = funcionario.id_funcionario
+                    };
+                }
+                telefone.tipo_telefone = fun.tipo_telefone;
+                telefone.numero_contato = fun.numero_contato;
+                telefone.data_cadastro = DateTime.Now;
+
+                _db.ContatosFuncionario.Update(telefone);
+                await _db.SaveChangesAsync();
+
+                transaction.Commit();
+
+                return true;
             }
-
-            var funcionarioAtt = new Funcionarios
+            catch
             {
-                id_funcionario = funcionario.id_funcionario,
-                nome_funcionario = fun.nome,
-                cpf = fun.cpf,
-                sexo = fun.sexo,
-                cargo_id = fun.cargo_id,
-                data_contratacao = fun.data_contratacao,
-                estado_civil = fun.estado_civil,
-            };
-
-            _db.Funcionarios.Update(funcionario);
-            await _db.SaveChangesAsync();
-
-            var endereco = new Endereco
-            {
-                funcionario_id = funcionario.id_funcionario,
-                tipo_endereco = fun.tipo_endereco,
-                rua = fun.rua,
-                cep = fun.cep,
-                bairro = fun.bairro,
-                num_endereco = fun.num_endereco,
-                cidade = fun.cidade,
-                uf_estado = fun.uf_estado,
-                data_cadastro = DateTime.Now
-            };
-
-            _db.Enderecos.Update(endereco);
-            await _db.SaveChangesAsync();
-
-            var telefone = new ContatoFuncionario
-            {
-                funcionario_id = funcionario.id_funcionario,
-                tipo_telefone = fun.tipo_telefone,
-                numero_contato = fun.numero_contato,
-                data_cadastro = DateTime.Now
-            };
-
-            _db.ContatosFuncionario.Update(telefone);
-            await _db.SaveChangesAsync();
-
-            return true;
-
+                transaction.Rollback();
+                throw;
+            }
         }
 
         public IEnumerable<object> FuncionarioCompleto(int id)

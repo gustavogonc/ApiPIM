@@ -106,7 +106,7 @@ namespace ApiPIM.Controllers
             {
                 bool f = await _funcionarioRepository.AtualizaFuncionario(id, func);
 
-                if(f == false)
+                if (!f)
                 {
                     return BadRequest("Houve um erro ao atualizar o funcionário");
                 }
@@ -115,9 +115,7 @@ namespace ApiPIM.Controllers
             }
             catch (Exception)
             {
-
                 return Problem("Ocorreu um erro ao editar funcionário.", null, 500, "Erro editar funcionário.", null);
-                throw;
             }
         }
     }
