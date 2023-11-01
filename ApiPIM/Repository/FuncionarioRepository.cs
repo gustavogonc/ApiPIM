@@ -1,5 +1,6 @@
 ﻿using ApiPIM.Context;
 using ApiPIM.Models;
+using ApiPIM.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Xml.Linq;
 
@@ -8,10 +9,12 @@ namespace ApiPIM.Repository
     public class FuncionarioRepository : IFuncionarioRepository
     {
         private readonly AppDbContext _db;
+        private readonly ICalculaDescontos _calculaDescontos;
 
-        public FuncionarioRepository(AppDbContext db)
+        public FuncionarioRepository(AppDbContext db, ICalculaDescontos calculaDescontos)
         {
             _db = db;
+            _calculaDescontos = calculaDescontos;
         }
 
         public List<Funcionarios> Get()
@@ -37,6 +40,76 @@ namespace ApiPIM.Repository
             _db.SaveChanges();
 
             return funcionario;
+        }
+
+        public IEnumerable<object> FuncionarioCompleto(int id)
+        {
+            var lista = from f in _db.Funcionarios
+                        join end in _db.Enderecos on f.id_funcionario equals end.funcionario_id into end_fun
+                        from fun in end_fun.DefaultIfEmpty()
+                        join tel in _db.ContatosFuncionario on f.id_funcionario equals tel.funcionario_id into tel_fun
+                        from fun_tel in tel_fun.DefaultIfEmpty()
+                        join car in _db.Cargos on f.cargo_id equals car.id_cargo into car_fun
+                        from cargo in car_fun.DefaultIfEmpty()
+                        join dep in _db.Departamentos on cargo.DepartamentoId equals dep.id_departamento into dep_carg
+                        from departamento in dep_carg.DefaultIfEmpty()
+                        where f.id_funcionario == id
+                        select (new
+                        {
+                            f.id_funcionario,
+                            f.nome_funcionario,
+                            f.sexo,
+                            f.estado_civil,
+                            f.cargo_id,
+                            departamento.nome_departamento,
+                            cargo.nome_cargo,
+                            f.data_contratacao,
+                            fun.tipo_endereco,
+                            fun.rua,
+                            fun.bairro,
+                            fun.cep,
+                            fun.cidade,
+                            fun_tel.tipo_telefone,
+                            fun_tel.numero_contato
+                        });
+
+            var groupedResults = lista
+                        .GroupBy(l => l.id_funcionario)
+                        .Select(g => new {
+                            Funcionario = new
+                            {
+                                id_funcionario = g.Key,
+                                nome_funcionario = g.First().nome_funcionario,
+                                sexo = g.First().sexo,
+                                estado_civil = g.First().estado_civil,
+                                cargo_id = g.First().cargo_id,
+                                departamento = g.First().nome_departamento,
+                                cargo = g.First().nome_cargo,
+                                data_contratacao = g.First().data_contratacao,
+                            },
+                            Enderecos = g
+                                .Where(e => e.rua != null) // Para filtrar possíveis nulls
+                                .Select(e => new {
+                                    e.tipo_endereco,
+                                    e.rua,
+                                    e.bairro,
+                                    e.cep,
+                                    e.cidade
+                                })
+                                .Distinct() // Para evitar endereços duplicados
+                                .ToList(),
+                            Contatos = g
+                                .Where(c => c.tipo_telefone != null) // Para filtrar possíveis nulls
+                                .Select(c => new {
+                                    c.tipo_telefone,
+                                    c.numero_contato
+                                })
+                                .Distinct() // Para evitar contatos duplicados
+                                .ToList()
+                        }).OrderBy(g => g.Funcionario.nome_funcionario).ToList();
+
+
+            return groupedResults;
         }
 
         public Funcionarios Update(Funcionarios funcionarios)
@@ -276,74 +349,26 @@ namespace ApiPIM.Repository
             }
         }
 
-        public IEnumerable<object> FuncionarioCompleto(int id)
+        public IEnumerable<object> FuncionarioSalario(int id)
         {
             var lista = from f in _db.Funcionarios
-                        join end in _db.Enderecos on f.id_funcionario equals end.funcionario_id into end_fun
-                        from fun in end_fun.DefaultIfEmpty()
-                        join tel in _db.ContatosFuncionario on f.id_funcionario equals tel.funcionario_id into tel_fun
-                        from fun_tel in tel_fun.DefaultIfEmpty()
                         join car in _db.Cargos on f.cargo_id equals car.id_cargo into car_fun
                         from cargo in car_fun.DefaultIfEmpty()
                         join dep in _db.Departamentos on cargo.DepartamentoId equals dep.id_departamento into dep_carg
                         from departamento in dep_carg.DefaultIfEmpty()
-                        where f.id_funcionario == id 
-                        select (new
+                        where f.id_funcionario == id
+                        select (new DetalhesFuncionarioModel
                         {
-                            f.id_funcionario,
-                            f.nome_funcionario,
-                            f.sexo,
-                            f.estado_civil,
-                            f.cargo_id,
-                            departamento.nome_departamento,
-                            cargo.nome_cargo,
-                            f.data_contratacao,
-                            fun.tipo_endereco,
-                            fun.rua,
-                            fun.bairro,
-                            fun.cep,
-                            fun.cidade,
-                            fun_tel.tipo_telefone,
-                            fun_tel.numero_contato
+                            NomeFuncionario = f.nome_funcionario,
+                            Departamento = departamento.nome_departamento,
+                            Cargo = cargo.nome_cargo,
+                            Salario = cargo.salario,
+                            DataContratacao = f.data_contratacao,
+                            DescontoINSS = _calculaDescontos.CalculaInss(cargo.salario),
+                            DescontoIRRF = _calculaDescontos.CalculaIrrf(cargo.salario, _calculaDescontos.CalculaInss(cargo.salario))
                         });
 
-            var groupedResults = lista
-                        .GroupBy(l => l.id_funcionario)
-                        .Select(g => new {
-                            Funcionario = new
-                            {
-                                id_funcionario = g.Key,
-                                nome_funcionario = g.First().nome_funcionario,
-                                sexo = g.First().sexo,
-                                estado_civil = g.First().estado_civil,
-                                cargo_id = g.First().cargo_id,
-                                departamento = g.First().nome_departamento,
-                                cargo = g.First().nome_cargo,
-                                data_contratacao = g.First().data_contratacao,
-                            },
-                            Enderecos = g
-                                .Where(e => e.rua != null) // Para filtrar possíveis nulls
-                                .Select(e => new {
-                                    e.tipo_endereco,
-                                    e.rua,
-                                    e.bairro,
-                                    e.cep,
-                                    e.cidade
-                                })
-                                .Distinct() // Para evitar endereços duplicados
-                                .ToList(),
-                            Contatos = g
-                                .Where(c => c.tipo_telefone != null) // Para filtrar possíveis nulls
-                                .Select(c => new {
-                                    c.tipo_telefone,
-                                    c.numero_contato
-                                })
-                                .Distinct() // Para evitar contatos duplicados
-                                .ToList()
-                        }).OrderBy(g => g.Funcionario.nome_funcionario).ToList();
-
-
-            return groupedResults;
+            return lista.ToList();
         }
     }
 }

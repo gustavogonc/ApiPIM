@@ -32,7 +32,7 @@ namespace ApiPIM.Models
         public int? cargo_id { get; set; }
 
         [Required]
-        public DateTime? data_contratacao { get; set; }
+        public DateTime data_contratacao { get; set; }
 
         [Required]
         public string? estado_civil { get; set; }

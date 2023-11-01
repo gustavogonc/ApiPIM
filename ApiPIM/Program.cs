@@ -1,6 +1,7 @@
 using ApiPIM.Context;
 using ApiPIM.Repository;
 using ApiPIM.Repository;
+using ApiPIM.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -22,6 +23,7 @@ builder.Services.AddScoped<ICargosRepository, CargosRepository>();
 builder.Services.AddScoped<IDepartamentosRepository, DepartamentosRepository>();
 builder.Services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<ICalculaDescontos, CalculaDescontos>();
 builder.Services.AddScoped<ObterPagamentoRepository>();
 builder.Services.AddScoped<FuncionarioDeducoesRepository>();
 
