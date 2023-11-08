@@ -9,5 +9,6 @@ namespace ApiPIM.Repository
         Task<List<Cargos>> Get();
         Task<IQueryable> Get(int id);
         Task<List<Cargos>> GetComDepartamentos();
+        Task DeleteCargo(int id);
     }
 }

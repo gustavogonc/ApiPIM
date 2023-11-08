@@ -79,5 +79,14 @@ namespace ApiPIM.Repository
             await _db.SaveChangesAsync();
             return true;
         }
+
+        public async Task DeleteCargo(int id)
+        {
+            Cargos cargo = await _db.Cargos.SingleOrDefaultAsync(c => c.id_cargo == id);
+            _db.Cargos.Remove(cargo);
+
+            await _db.SaveChangesAsync();
+
+        }
     }
 }

@@ -91,5 +91,27 @@ namespace ApiPIM.Controllers
                 return Problem("Ocorreu um erro ao cadastrar cargo.", null, 500, "Erro cadastrar cargos.", null);
             }
         }
+
+        [HttpDelete]
+        [Route("excluir/{id:int}")]
+        public async Task<ActionResult> DeleteCargo(int id)
+        {
+            try
+            {
+                var result = await _cargosRepository.Get(id);
+                if (result == null)
+                {
+                    return NotFound("Id de cargo não encontrado");
+                }
+
+                await _cargosRepository.DeleteCargo(id);
+                return Ok();
+
+            }
+            catch (Exception ex)
+            {
+                return Problem("Ocorreu um erro ao deletar cargo.", null, 500, "Erro deletar cargos.", null);
+            }
+        }
     }
 }
