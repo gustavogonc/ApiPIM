@@ -138,20 +138,28 @@ namespace ApiPIM.Repository
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            Funcionarios f = _db.Funcionarios.SingleOrDefault(a => a.id_funcionario == id);
+            Funcionarios f = GetById(id);
 
-            if(f == null)
+            if (f == null)
             {
-                _db.Remove(f);
-                _db.SaveChanges();
+                return false;
 
-                return true;
-            }   
+            }
 
+            Endereco end = await _db.Enderecos.SingleOrDefaultAsync(e => e.funcionario_id == f.id_funcionario);
 
-            return false;
+            ContatoFuncionario cto = await _db.ContatosFuncionario.SingleOrDefaultAsync(c => c.funcionario_id == f.id_funcionario);
+
+            _db.Funcionarios.Remove(f);
+            _db.Enderecos.Remove(end);
+            _db.ContatosFuncionario.Remove(cto);
+
+            _db.SaveChanges();
+
+            return true;
+
         }
 
         public IEnumerable<object> FuncionariosCompleto()

@@ -141,5 +141,26 @@ namespace ApiPIM.Controllers
                 return Problem("Ocorreu um erro ao editar funcionário.", null, 500, "Erro editar funcionário.", null);
             }
         }
+
+        [HttpDelete]
+        [Route("excluir/{id:int}")]
+        public async Task<ActionResult> DeleteFuncionario(int id)
+        {
+            try
+            {
+                bool f = await _funcionarioRepository.Delete(id);
+
+                if (!f)
+                {
+                    return NotFound("Funcionário não encontrado");
+                }
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return Problem("Ocorreu um erro ao deletar funcionário.", null, 500, "Erro deletar funcionário.", null);
+            }
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace ApiPIM.Repository
         Funcionarios GetByName(string name);
         Funcionarios Add(Funcionarios funcionario);
         Funcionarios Update(Funcionarios funcionario);
-        bool Delete(int id);
+        Task<bool> Delete(int id);
         IEnumerable<object> FuncionariosCompleto();
         Task<bool> NovoFuncionario(FuncionarioDTO fun);
         Task<bool> AtualizaFuncionario(int id, FuncionarioDTO fun);
