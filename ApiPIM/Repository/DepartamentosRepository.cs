@@ -70,6 +70,14 @@ namespace ApiPIM.Repository
             var departamento = await _db.Departamentos.SingleOrDefaultAsync(a => a.id_departamento == id);
 
             _db.Departamentos.Remove(departamento!);
+
+            var listaCargos = await _db.Cargos.Where(x => x.DepartamentoId == id).ToListAsync();
+
+            listaCargos.ForEach(c =>
+            {
+                _db.Cargos.Remove(c);
+            });
+
             await _db.SaveChangesAsync();
             return departamento!;
         }

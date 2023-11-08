@@ -92,5 +92,27 @@ namespace ApiPIM.Controllers
                 return Problem("Ocorreu um erro ao inserir departamento.", null, 500, "Erro novo departamento.", null);
             }
         }
+
+        [HttpDelete("excluir/{id:int}")]
+        public async Task<ActionResult> DeletarDepartamento(int id)
+        {
+            try
+            {
+                Departamentos dep = await _departamentosRepository.Get(id);
+
+                if (dep == null)
+                {
+                    return NotFound("Departamento não encontrado.");
+                }
+
+                await _departamentosRepository.Deletar(id);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return Problem("Ocorreu um erro ao deletar departamento.", null, 500, "Erro deletar departamento.", null);
+            }
+        }
     }
 }
