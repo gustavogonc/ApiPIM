@@ -17,13 +17,14 @@ builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializ
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ApiPIM.Services.SenhaServices>();
-builder.Services.AddScoped<ApiPIM.Services.TokenService>();
+builder.Services.AddScoped<SenhaServices>();
+builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<ICargosRepository, CargosRepository>();
 builder.Services.AddScoped<IDepartamentosRepository, DepartamentosRepository>();
 builder.Services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<ICalculaDescontos, CalculaDescontos>();
+builder.Services.AddScoped<IProventoRepository, ProventoRepository>();
 builder.Services.AddScoped<ObterPagamentoRepository>();
 builder.Services.AddScoped<FuncionarioDeducoesRepository>();
 
