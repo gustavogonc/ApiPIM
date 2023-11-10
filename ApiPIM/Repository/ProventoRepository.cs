@@ -10,11 +10,21 @@ namespace ApiPIM.Repository
         {
             _db = db;
         }
-        public async Task AdicionaProvento(ProventosModel p)
+        public async Task AdicionaProvento(List<ProventosModel> p)
         {
-            await _db.Proventos.AddAsync(p);
-            await _db.SaveChangesAsync();
-            return;
+            try
+            {
+                p.ForEach( async provento => {
+                    await _db.Proventos.AddAsync(provento);
+                });
+                await _db.SaveChangesAsync();
+                return;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
     }
 }

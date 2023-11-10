@@ -15,14 +15,14 @@ namespace ApiPIM.Controllers
             _proventoRepository = proventoRepository;
         }
 
-        [HttpPost("/AdicionaValores")]
+        [HttpPost]
+        [Route("AdicionaValores")]
         public async Task<IActionResult> AdicionarValores([FromBody] List<ProventosModel> proventos)
         {
             try
             {
-                proventos.ForEach(p => {
-                    _proventoRepository.AdicionaProvento(p);
-                });
+               await _proventoRepository.AdicionaProvento(proventos);
+
                 return Ok();
             }
             catch (Exception ex)

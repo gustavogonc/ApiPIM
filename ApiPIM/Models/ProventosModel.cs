@@ -14,6 +14,5 @@ namespace ApiPIM.Models
         public decimal? valor { get; set; }
         public string? mes { get; set; }
         public string? ano  { get; set; }
-        public DateTime? data { get; set; }
     }
 }
