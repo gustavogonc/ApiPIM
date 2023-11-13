@@ -17,7 +17,7 @@ namespace ApiPIM.Context
         public DbSet<Departamentos> Departamentos { get; set; }
         public DbSet<Cargos> Cargos { get; set; }
         public DbSet<ProventosModel> Proventos { get; set; }
-        public DbSet<HistoricoPagamento> ValoresPagamento { get; set; }
+        public DbSet<ValoresPagamento> ValoresPagamentos { get; set; }
 
     }
 }

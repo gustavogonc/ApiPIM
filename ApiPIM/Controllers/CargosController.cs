@@ -52,7 +52,7 @@ namespace ApiPIM.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("atualizaCargo")]
         public async Task<ActionResult> AtualizaCargo([FromBody] Cargos cargo)
         {

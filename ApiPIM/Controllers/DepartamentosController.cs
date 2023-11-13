@@ -54,7 +54,7 @@ namespace ApiPIM.Controllers
             }
         }
 
-        [HttpPut("atualizaDepartamento")]
+        [HttpPost("atualizaDepartamento")]
         public async Task<ActionResult> AtualizaDepartamento(Departamentos dep)
         {
             try

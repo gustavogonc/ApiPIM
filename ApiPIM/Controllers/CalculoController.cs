@@ -21,7 +21,8 @@ namespace ApiPIM.Controllers
         {
             try
             {
-               await _proventoRepository.AdicionaProvento(proventos);
+                await _proventoRepository.AdicionaProvento(proventos);
+                await _proventoRepository.AdicionaTotal(proventos);
 
                 return Ok();
             }
