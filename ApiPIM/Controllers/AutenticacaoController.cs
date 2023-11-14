@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApiPIM.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[Authorize(AuthenticationSchemes = "Bearer")]
     [ApiController]
     public class AutenticacaoController : ControllerBase
     {
@@ -18,6 +18,7 @@ namespace ApiPIM.Controllers
             _repository = repository;
         }
 
+        [AllowAnonymous]
         [HttpGet("listarUsuarios")]
         public IActionResult RetornaUsuarios()
         {

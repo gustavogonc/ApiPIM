@@ -28,6 +28,8 @@ namespace ApiPIM.Models
         [Required]
         public string? sexo { get; set; }
 
+        public string? email_usuario { get; set; }
+
         [Required]
         public int? cargo_id { get; set; }
 
