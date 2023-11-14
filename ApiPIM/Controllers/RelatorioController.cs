@@ -121,16 +121,16 @@ namespace ApiPIM.Controllers
 
         private static void CalculaINSS(FuncionarioDeducoes funcionarioDeducoesFiltrados)
         {
-            if (funcionarioDeducoesFiltrados.Salario > 1100.01M && funcionarioDeducoesFiltrados.Salario < 2203.49M)
+            if (funcionarioDeducoesFiltrados.Salario > 1320.01M && funcionarioDeducoesFiltrados.Salario < 2571.29M)
             {
                 funcionarioDeducoesFiltrados.INSS = funcionarioDeducoesFiltrados.Salario * 0.09M;
 
             }
-            else if (funcionarioDeducoesFiltrados.Salario > 2203.49M && funcionarioDeducoesFiltrados.Salario < 3305.23M)
+            else if (funcionarioDeducoesFiltrados.Salario > 2571.30M && funcionarioDeducoesFiltrados.Salario < 3856.94M)
             {
                 funcionarioDeducoesFiltrados.INSS = funcionarioDeducoesFiltrados.Salario * 0.12M;
             }
-            else if (funcionarioDeducoesFiltrados.Salario > 3305.22M)
+            else if (funcionarioDeducoesFiltrados.Salario > 3856.95M)
             {
                 funcionarioDeducoesFiltrados.INSS = funcionarioDeducoesFiltrados.Salario * 0.14M;
             }
