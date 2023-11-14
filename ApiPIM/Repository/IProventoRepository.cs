@@ -6,5 +6,6 @@ namespace ApiPIM.Repository
     {
         Task AdicionaProvento(List<ProventosModel> provento);
         Task AdicionaTotal(List<ProventosModel> proventos);
+        Task<bool> VerificaCaluloExistente(List<ProventosModel> proventos);
     }
 }

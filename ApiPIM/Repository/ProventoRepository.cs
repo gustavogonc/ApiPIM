@@ -1,5 +1,6 @@
 ﻿using ApiPIM.Context;
 using ApiPIM.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiPIM.Repository
 {
@@ -59,6 +60,18 @@ namespace ApiPIM.Repository
 
             await _db.ValoresPagamentos.AddAsync(total);
             await _db.SaveChangesAsync();
+        }
+
+        public async Task<bool> VerificaCaluloExistente(List<ProventosModel> proventos)
+        {
+            var info = await _db.ValoresPagamentos.SingleOrDefaultAsync(c => (c.ano == proventos[0].ano) && (c.mes == proventos[0].mes) && (c.id_funcionario == proventos[0].id_funcionario));
+
+            if(info != null)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

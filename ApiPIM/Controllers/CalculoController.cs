@@ -21,6 +21,11 @@ namespace ApiPIM.Controllers
         {
             try
             {
+                bool temCalculo = await _proventoRepository.VerificaCaluloExistente(proventos);
+                if (temCalculo)
+                {
+                    return UnprocessableEntity();
+                }
                 await _proventoRepository.AdicionaProvento(proventos);
                 await _proventoRepository.AdicionaTotal(proventos);
 
