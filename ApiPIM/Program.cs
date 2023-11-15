@@ -19,6 +19,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<SenhaServices>();
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<IAppRepository, AppRepository>();
 builder.Services.AddScoped<ICargosRepository, CargosRepository>();
 builder.Services.AddScoped<IDepartamentosRepository, DepartamentosRepository>();
 builder.Services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
