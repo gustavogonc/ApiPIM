@@ -121,7 +121,7 @@ namespace ApiPIM.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("atualizaFuncionario/{id:int}")]
         public async Task<ActionResult> PutAtualizaFuncionario(int id, FuncionarioDTO func)
         {
@@ -142,7 +142,7 @@ namespace ApiPIM.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpPost]
         [Route("excluir/{id:int}")]
         public async Task<ActionResult> DeleteFuncionario(int id)
         {
