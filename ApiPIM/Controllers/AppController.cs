@@ -57,5 +57,27 @@ namespace ApiPIM.Controllers
                 return Problem("Erro ao buscar os proventos do mes do colaborador", null, 500, "Erro provento mes do colaborador");
             }
         }
+
+        [HttpPost]
+        [Route("loginApp")]
+        public async Task<IActionResult> LoginApp([FromBody] Autenticacao auth)
+        {
+            try
+            {
+                var info = await _app.Login(auth);
+
+                if(info == null)
+                {
+                    return NotFound("Usuário ou senha inválidos");
+                }
+
+                return Ok(info);
+            }
+            catch (Exception ex)
+            {
+
+                return Problem("Erro ao logar colaborador", null, 500, "Erro provento logar");
+            }
+        }
     }
 }

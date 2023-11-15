@@ -1,5 +1,6 @@
 ﻿using ApiPIM.Context;
 using ApiPIM.Models;
+using ApiPIM.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiPIM.Repository
@@ -7,9 +8,13 @@ namespace ApiPIM.Repository
     public class AppRepository : IAppRepository
     {
         private readonly AppDbContext _context;
-        public AppRepository(AppDbContext context)
+        private readonly SenhaServices _senhaServices;
+        private readonly TokenService _tokenService;
+        public AppRepository(AppDbContext context, SenhaServices senhaServices, TokenService tokenService)
         {
             _context = context;
+            _senhaServices = senhaServices;
+            _tokenService = tokenService;
         }
 
         public async Task<IEnumerable<object>> RetornaMesesFuncionario(int id)
@@ -69,6 +74,40 @@ namespace ApiPIM.Repository
             }); 
 
             return  await resultadoAgrupado.ToListAsync();
+        }
+
+        public async Task<IEnumerable<object>> Login(Autenticacao login)
+        {
+            string senha = _senhaServices.ComputeHash(login.senha);
+            var usuario = _context.Usuarios.FirstOrDefault(u => (u.email == login.email) && (u.senha == senha));
+
+            if (usuario == null)
+            {
+                return null;
+            }
+
+            Bearer bearer = _tokenService.GeraToken(login);
+            AtualizarTokenUsuario(usuario, bearer);
+
+            var id = from email in _context.Funcionarios
+                     where email.email_usuario == usuario.email
+                     select (new{
+                         email.id_funcionario, 
+                         email.email_usuario
+                    });
+
+            return await id.ToListAsync();
+        }
+
+        public void AtualizarTokenUsuario(Usuarios usuario, Bearer bearer)
+        {
+            var user = _context.Usuarios.SingleOrDefault(u => u.usuario_id == usuario.usuario_id);
+            if (user != null)
+            {
+                user.token = bearer.AccessKey;
+                user.expiration_token = bearer.Validade;
+                _context.SaveChanges();
+            }
         }
     }
 }
