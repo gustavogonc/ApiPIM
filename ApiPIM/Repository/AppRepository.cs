@@ -93,7 +93,8 @@ namespace ApiPIM.Repository
                      where email.email_usuario == usuario.email
                      select (new{
                          email.id_funcionario, 
-                         email.email_usuario
+                         email.email_usuario,
+                         email.nome_funcionario
                     });
 
             return await id.ToListAsync();
