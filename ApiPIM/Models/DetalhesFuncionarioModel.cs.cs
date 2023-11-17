@@ -9,5 +9,6 @@
         public DateTime DataContratacao { get; set; }
         public decimal DescontoINSS { get; set; }
         public decimal DescontoIRRF { get; set; }
+        public decimal DescontoFGTS { get; set; }
     }
 }

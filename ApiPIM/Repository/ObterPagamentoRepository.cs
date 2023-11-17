@@ -4,6 +4,7 @@ namespace ApiPIM.Repository
 {
     public class ObterPagamentoRepository
     {
+        string connectionString = @"Data Source=20.14.87.19,1433;Initial Catalog=PIM;User ID=sa1;Password=1234;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;";
 
         public IEnumerable<HistPagamentoModel> ObterPagamentosFiltrados(int mes)
         {
@@ -24,17 +25,17 @@ namespace ApiPIM.Repository
 
         public List<HistPagamentoModel> ObterPagamentos()
         {
-            string connectionString = @"Data Source=20.206.249.21,1433;Initial Catalog=PIM;User ID=sa1;Password=Pim123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;";
+          
 
 
             List<HistPagamentoModel> pagamentos = new List<HistPagamentoModel>();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = @"SELECT [id_hist], h.[id_funcionario], [data_pagamento], c.salario, [hora_ex], [beneficios]
-                         FROM [PIM].[dbo].[tb_histpagment] h
-                         inner join tb_funcionarios f on h.id_funcionario = f.id_funcionario
-                        inner join tb_cargos c on f.cargo_id = c.id_cargo ";
+                string query = @"SELECT I.ID, I.id_funcionario, I.data, i.nome_valor, i.valor  FROM 
+                                    tb_info_pagamento I
+                                    INNER JOIN tb_funcionarios F ON F.id_funcionario = I.id_funcionario
+                                    INNER JOIN tb_cargos C ON C.id_cargo = F.cargo_id ";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -48,9 +49,8 @@ namespace ApiPIM.Repository
                                 IdHist = reader.GetInt32(0),
                                 IdFuncionario = reader.GetInt32(1),
                                 DataPagamento = reader.GetDateTime(2),
-                                SalarioBase = reader.GetDecimal(3),
-                                HoraEx = reader.GetTimeSpan(4),
-                                Beneficios = (float)reader.GetDouble(5)
+                                Texto = reader.GetString(3),
+                                Valor = reader.GetDecimal(4),
                             };
                             pagamentos.Add(pagamento);
                         }
@@ -68,17 +68,15 @@ namespace ApiPIM.Repository
 
         public List<DashboardModel> ObterPagamentoMensal()
         {
-            string connectionString = @"Data Source=20.206.249.21,1433;Initial Catalog=PIM;User ID=sa1;Password=Pim123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;";
-
-
+        
             List<DashboardModel> pagamentos = new List<DashboardModel>();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = @"SELECT 
                                     DATENAME(MONTH, data_pagamento) + '/' + DATENAME(YEAR, data_pagamento) AS nome_mes,
-                                    SUM(total_liq) AS somatoria_total_liquido
-                                FROM [dbo].[tb_histpagment]
+                                    SUM(valor_liquido) AS somatoria_total_liquido
+                                FROM [dbo].[tb_valores_pagamento]
                                 GROUP BY YEAR(data_pagamento), MONTH(data_pagamento), DATENAME(MONTH, data_pagamento), DATENAME(YEAR, data_pagamento)
                                 ORDER BY YEAR(data_pagamento), MONTH(data_pagamento)
                                 ";
@@ -93,7 +91,7 @@ namespace ApiPIM.Repository
                             DashboardModel pagamento = new DashboardModel
                             {
                                 texto = reader.GetString(0),
-                                totalLiq = (float)reader.GetDouble(1)
+                                totalLiq = (float)reader.GetDecimal(1)
                             };
                             pagamentos.Add(pagamento);
                         }
@@ -109,8 +107,7 @@ namespace ApiPIM.Repository
 
         public List<DashboardModel> ObterPagamentosDepartamento()
         {
-            string connectionString = @"Data Source=20.206.249.21,1433;Initial Catalog=PIM;User ID=sa1;Password=Pim123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;";
-
+         
 
             List<DashboardModel> pagamentos = new List<DashboardModel>();
 

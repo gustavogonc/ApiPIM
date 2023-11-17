@@ -5,11 +5,12 @@ namespace ApiPIM.Repository
 {
     public class FuncionarioDeducoesRepository
     {
+        string connectionString = @"Data Source=20.14.87.19:3389;Initial Catalog=PIM;User ID=sa1;Password=Pim123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;";
+
 
         public List<FuncionarioDeducoes> ObterFuncionarioDeducoes()
         {
-            string connectionString = @"Data Source=20.206.249.21,1433;Initial Catalog=PIM;User ID=sa1;Password=Pim123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;";
-
+      
             List<FuncionarioDeducoes> funcionarioDeducoesList = new List<FuncionarioDeducoes>();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -51,8 +52,7 @@ namespace ApiPIM.Repository
 
         public List<Funcionario> ObterFuncionariosBasicos()
         {
-            string connectionString = @"Data Source=20.206.249.21,1433;Initial Catalog=PIM;User ID=sa1;Password=Pim123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;";
-
+       
             List<Funcionario> funcionarios = new List<Funcionario>();
 
             using (SqlConnection connection = new SqlConnection(connectionString))

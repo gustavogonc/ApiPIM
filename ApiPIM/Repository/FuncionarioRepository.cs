@@ -375,10 +375,13 @@ namespace ApiPIM.Repository
                             Salario = Math.Round(cargo.salario, 2),
                             DataContratacao = f.data_contratacao,
                             DescontoINSS = Math.Round(_calculaDescontos.CalculaInss(cargo.salario), 2),
-                            DescontoIRRF = Math.Round(_calculaDescontos.CalculaIrrf(cargo.salario, _calculaDescontos.CalculaInss(cargo.salario)), 2)
+                            DescontoIRRF = Math.Round(_calculaDescontos.CalculaIrrf(cargo.salario, _calculaDescontos.CalculaInss(cargo.salario)), 2),
+                            DescontoFGTS = Math.Round(_calculaDescontos.CalculaFGTS(cargo.salario), 2),
                         });
 
             return lista.ToList();
         }
+
+       
     }
 }
