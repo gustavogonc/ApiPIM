@@ -153,8 +153,15 @@ namespace ApiPIM.Repository
             ContatoFuncionario cto = await _db.ContatosFuncionario.SingleOrDefaultAsync(c => c.funcionario_id == f.id_funcionario);
 
             _db.Funcionarios.Remove(f);
-            _db.Enderecos.Remove(end);
-            _db.ContatosFuncionario.Remove(cto);
+
+           if(cto != null)
+            {
+                _db.ContatosFuncionario.Remove(cto);
+            }
+           if(end != null)
+            {
+                _db.Enderecos.Remove(end);
+            }
 
             _db.SaveChanges();
 

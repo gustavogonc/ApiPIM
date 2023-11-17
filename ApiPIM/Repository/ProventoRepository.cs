@@ -48,6 +48,8 @@ namespace ApiPIM.Repository
 
             totalLiquido = totalProventos - totalDescontos;
 
+            var dataPgto = $"{proventos[0].ano}-{proventos[0].mes}-{05} 00:00:00.000";
+
             ValoresPagamento total = new()
                 {id_funcionario = proventos[0].id_funcionario,
                 total_proventos = totalProventos,
@@ -55,7 +57,7 @@ namespace ApiPIM.Repository
                 valor_liquido = totalLiquido,
                 mes = proventos[0].mes,
                 ano = proventos[0].ano,
-                data_pagamento = proventos[0].data
+                data_pagamento = DateTime.Parse(dataPgto)
             };
 
             await _db.ValoresPagamentos.AddAsync(total);

@@ -65,6 +65,7 @@ namespace ApiPIM.Repository
             await _db.SaveChangesAsync();
             return dep;
         }
+
         public async Task<Departamentos> Deletar(int id)
         {
             var departamento = await _db.Departamentos.SingleOrDefaultAsync(a => a.id_departamento == id);
@@ -73,10 +74,13 @@ namespace ApiPIM.Repository
 
             var listaCargos = await _db.Cargos.Where(x => x.DepartamentoId == id).ToListAsync();
 
-            listaCargos.ForEach(c =>
+            if(listaCargos.Count > 0)
             {
-                _db.Cargos.Remove(c);
-            });
+                listaCargos.ForEach(c =>
+                {
+                    _db.Cargos.Remove(c);
+                });
+            }
 
             await _db.SaveChangesAsync();
             return departamento!;
