@@ -110,5 +110,23 @@ namespace ApiPIM.Repository
                 _context.SaveChanges();
             }
         }
+
+        public async Task<bool> AlterarSenha(AlteracaoSenha login)
+        {
+            string senha = _senhaServices.ComputeHash(login.senha);
+            string senhaNova = _senhaServices.ComputeHash(login.novaSenha);
+
+            Usuarios usuario = await _context.Usuarios.SingleOrDefaultAsync(u => (u.email == login.email) && (u.senha == senha));
+
+            if(usuario == null)
+            {
+                return false;
+            }
+            usuario.senha = senhaNova;
+
+            _context.Usuarios.Update(usuario);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

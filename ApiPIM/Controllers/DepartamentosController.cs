@@ -93,7 +93,7 @@ namespace ApiPIM.Controllers
             }
         }
 
-        [HttpPost("excluir/{id:int}")]
+        [HttpDelete("excluir/{id:int}")]
         public async Task<ActionResult> DeletarDepartamento(int id)
         {
             try

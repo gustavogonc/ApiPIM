@@ -92,7 +92,7 @@ namespace ApiPIM.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpDelete]
         [Route("excluir/{id:int}")]
         public async Task<ActionResult> DeleteCargo(int id)
         {

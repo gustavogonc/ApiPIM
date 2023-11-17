@@ -76,8 +76,31 @@ namespace ApiPIM.Controllers
             catch (Exception ex)
             {
 
-                return Problem("Erro ao logar colaborador", null, 500, "Erro provento logar");
+                return Problem($"Erro ao logar colaborador  {ex.Message}", null, 500, "Erro logar colaborador");
             }
+        }
+
+        [HttpPut]
+        [Route("atualizaSenha")]
+        public async Task<IActionResult> AlterarSenha(AlteracaoSenha novaSenha)
+        {
+            try
+            {
+                bool atualizou = await _app.AlterarSenha(novaSenha);
+
+                if (!atualizou)
+                {
+                    return BadRequest("Senha atual incorreta");
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return Problem($"Erro ao alterar senha colaborador {ex.Message}", null, 500, "Erro alterar senha");
+            }
+
+
         }
     }
 }

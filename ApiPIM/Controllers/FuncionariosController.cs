@@ -142,7 +142,7 @@ namespace ApiPIM.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpDelete]
         [Route("excluir/{id:int}")]
         public async Task<ActionResult> DeleteFuncionario(int id)
         {
