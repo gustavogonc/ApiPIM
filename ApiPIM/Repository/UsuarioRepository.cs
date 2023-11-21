@@ -1,6 +1,7 @@
 ﻿using ApiPIM.Context;
 using ApiPIM.Models;
 using ApiPIM.Services;
+using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
 
 namespace ApiPIM.Repository
@@ -83,6 +84,50 @@ namespace ApiPIM.Repository
                 _db.SaveChanges();
             }
         }
-        
+
+        public async Task<bool> Excluir(int id)
+        {
+            var user = await _db.Usuarios.SingleOrDefaultAsync(u => u.usuario_id == id);
+
+            if(user == null)
+            {
+                return false;
+            }
+
+            _db.Usuarios.Remove(user);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<Usuarios> Editar(int id, Usuarios user)
+        {
+            if(id != user.usuario_id)
+            {
+                return null;
+            }
+
+            var usuario = await _db.Usuarios.SingleOrDefaultAsync(u => u.usuario_id == id);
+
+            if(usuario == null)
+            {
+                return null;
+            }
+
+            usuario.email = user.email;
+            usuario.nome = user.nome;
+            usuario.administrador = user.administrador;
+            usuario.ativo = user.ativo;
+
+            if(user.senha != "")
+            {
+                var senha = _senhaServices.ComputeHash(user.senha);
+                usuario.senha = senha;
+            }
+
+            _db.Usuarios.Update(usuario);
+            await _db.SaveChangesAsync();
+
+            return usuario;
+        }
     }
 }

@@ -17,7 +17,6 @@ namespace ApiPIM.Models
         public string? email { get; set; }
 
 
-        [Required]
         [DataType(DataType.Password)]
         public string? senha { get; set; }
 
