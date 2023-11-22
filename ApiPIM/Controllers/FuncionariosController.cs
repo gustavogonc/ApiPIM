@@ -121,7 +121,7 @@ namespace ApiPIM.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("atualizaFuncionario/{id:int}")]
         public async Task<ActionResult> PutAtualizaFuncionario(int id, FuncionarioDTO func)
         {

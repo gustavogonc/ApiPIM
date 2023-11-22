@@ -61,6 +61,7 @@ namespace ApiPIM.Repository
                             f.sexo,
                             f.estado_civil,
                             f.cargo_id,
+                            f.cpf,
                             departamento.nome_departamento,
                             cargo.nome_cargo,
                             f.data_contratacao,
@@ -86,6 +87,7 @@ namespace ApiPIM.Repository
                                 departamento = g.First().nome_departamento,
                                 cargo = g.First().nome_cargo,
                                 data_contratacao = g.First().data_contratacao,
+                                cpf = g.First().cpf
                             },
                             Enderecos = g
                                 .Where(e => e.rua != null) // Para filtrar possíveis nulls
@@ -187,6 +189,7 @@ namespace ApiPIM.Repository
                             f.sexo,
                             f.estado_civil,
                             f.cargo_id,
+                            f.cpf,
                             departamento.nome_departamento,
                             cargo.nome_cargo,
                             f.data_contratacao,
@@ -212,6 +215,7 @@ namespace ApiPIM.Repository
                                 departamento = g.First().nome_departamento,
                                 cargo = g.First().nome_cargo,
                                 data_contratacao = g.First().data_contratacao,
+                                cpf = g.First().cpf
                             },
                             Enderecos = g
                                 .Where(e => e.rua != null) // Para filtrar possíveis nulls
