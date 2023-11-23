@@ -126,7 +126,7 @@ namespace ApiPIM.Controllers
         {
             try
             {
-                //bool f = await _funcionarioRepository.AtualizaFuncionario(id, func);
+                bool f = await _funcionarioRepository.AtualizaFuncionario(id, func);
 
                 if (!f)
                 {
