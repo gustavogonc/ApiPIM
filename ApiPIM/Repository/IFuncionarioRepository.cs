@@ -1,4 +1,5 @@
 ﻿using ApiPIM.Models;
+using ApiPIM.Models.FuncionarioDTO;
 
 namespace ApiPIM.Repository
 {
@@ -12,7 +13,7 @@ namespace ApiPIM.Repository
         Task<bool> Delete(int id);
         IEnumerable<object> FuncionariosCompleto();
         Task<bool> NovoFuncionario(FuncionarioDTO fun);
-        Task<bool> AtualizaFuncionario(int id, FuncionarioDTO fun);
+        Task<bool> AtualizaFuncionario(int id, FuncionarioEdicaoDTO fun);
         IEnumerable<object> FuncionarioCompleto(int id);
         IEnumerable<object> FuncionarioSalario(int id);
     }

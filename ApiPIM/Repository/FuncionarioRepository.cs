@@ -1,5 +1,6 @@
 ﻿using ApiPIM.Context;
 using ApiPIM.Models;
+using ApiPIM.Models.FuncionarioDTO;
 using ApiPIM.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Xml.Linq;
@@ -65,11 +66,15 @@ namespace ApiPIM.Repository
                             departamento.nome_departamento,
                             cargo.nome_cargo,
                             f.data_contratacao,
+                            fun.id_endereco,
                             fun.tipo_endereco,
                             fun.rua,
                             fun.bairro,
+                            fun.num_endereco,
                             fun.cep,
                             fun.cidade,
+                            fun.uf_estado,
+                            fun_tel.id_contato,
                             fun_tel.tipo_telefone,
                             fun_tel.numero_contato
                         });
@@ -92,17 +97,21 @@ namespace ApiPIM.Repository
                             Enderecos = g
                                 .Where(e => e.rua != null) // Para filtrar possíveis nulls
                                 .Select(e => new {
+                                    id = e.id_endereco,
                                     e.tipo_endereco,
                                     e.rua,
                                     e.bairro,
+                                    e.num_endereco,
                                     e.cep,
-                                    e.cidade
+                                    e.cidade,
+                                    e.uf_estado
                                 })
                                 .Distinct() // Para evitar endereços duplicados
                                 .ToList(),
                             Contatos = g
                                 .Where(c => c.tipo_telefone != null) // Para filtrar possíveis nulls
                                 .Select(c => new {
+                                    id = c.id_contato,
                                     c.tipo_telefone,
                                     c.numero_contato
                                 })
@@ -193,11 +202,15 @@ namespace ApiPIM.Repository
                             departamento.nome_departamento,
                             cargo.nome_cargo,
                             f.data_contratacao,
+                            fun.id_endereco,
                             fun.tipo_endereco,
                             fun.rua,
                             fun.bairro,
+                            fun.num_endereco,
                             fun.cep,
                             fun.cidade,
+                            fun.uf_estado,
+                            fun_tel.id_contato,
                             fun_tel.tipo_telefone,
                             fun_tel.numero_contato
                         });
@@ -220,17 +233,21 @@ namespace ApiPIM.Repository
                             Enderecos = g
                                 .Where(e => e.rua != null) // Para filtrar possíveis nulls
                                 .Select(e => new {
+                                    id = e.id_endereco,
                                     e.tipo_endereco,
                                     e.rua,
                                     e.bairro,
+                                    e.num_endereco,
                                     e.cep,
-                                    e.cidade
+                                    e.cidade,
+                                    e.uf_estado
                                 })
                                 .Distinct() // Para evitar endereços duplicados
                                 .ToList(),
                             Contatos = g
                                 .Where(c => c.tipo_telefone != null) // Para filtrar possíveis nulls
                                 .Select(c => new {
+                                    id = c.id_contato,
                                     c.tipo_telefone,
                                     c.numero_contato
                                 })
@@ -299,13 +316,13 @@ namespace ApiPIM.Repository
             }
         }
 
-        public async Task<bool> AtualizaFuncionario(int id, FuncionarioDTO fun)
+        public async Task<bool> AtualizaFuncionario(int id, FuncionarioEdicaoDTO fun)
         {
             using var transaction = _db.Database.BeginTransaction();
 
             try
             {
-                var funcionario = await _db.Funcionarios.SingleOrDefaultAsync(f => f.id_funcionario == id);
+                Funcionarios funcionario = await _db.Funcionarios.SingleOrDefaultAsync(f => f.id_funcionario == id);
 
                 if (funcionario == null)
                 {
@@ -320,43 +337,76 @@ namespace ApiPIM.Repository
                 funcionario.estado_civil = fun.estado_civil;
 
                 _db.Funcionarios.Update(funcionario);
-                await _db.SaveChangesAsync();
 
-                var endereco = await _db.Enderecos.SingleOrDefaultAsync(e => e.funcionario_id == funcionario.id_funcionario);
+                List<Endereco> endereco = await _db.Enderecos.Where(e => e.funcionario_id == funcionario.id_funcionario).ToListAsync();
 
-                if (endereco == null)
+                if (endereco.Count == 0 && fun.enderecos != null)
                 {
-                    endereco = new Endereco
-                    {
-                        funcionario_id = funcionario.id_funcionario
-                    };
+                     fun.enderecos.ForEach(end => 
+                     {
+                        Endereco item = new Endereco();
+
+                        item.tipo_endereco = end.tipo_endereco;
+                        item.rua = end.rua;
+                        item.cep = end.cep;
+                        item.bairro = end.bairro;
+                        item.num_endereco = end.num_endereco;
+                        item.cidade = end.cidade;
+                        item.uf_estado = end.uf_estado;
+                        item.data_cadastro = DateTime.Now;
+                        item.funcionario_id = funcionario.id_funcionario;
+
+                        _db.Enderecos.Add(item);
+                     });
+
                 }
-                endereco.tipo_endereco = fun.tipo_endereco;
-                endereco.rua = fun.rua;
-                endereco.cep = fun.cep;
-                endereco.bairro = fun.bairro;
-                endereco.num_endereco = fun.num_endereco;
-                endereco.cidade = fun.cidade;
-                endereco.uf_estado = fun.uf_estado;
-                endereco.data_cadastro = DateTime.Now;
-
-                _db.Enderecos.Update(endereco);
-                await _db.SaveChangesAsync();
-
-                var telefone = await _db.ContatosFuncionario.SingleOrDefaultAsync(t => t.funcionario_id == funcionario.id_funcionario);
-
-                if (telefone == null)
+                else if(endereco.Count > 0 && fun.enderecos != null)
                 {
-                    telefone = new ContatoFuncionario
+                    endereco.ForEach(end => 
                     {
-                        funcionario_id = funcionario.id_funcionario
-                    };
-                }
-                telefone.tipo_telefone = fun.tipo_telefone;
-                telefone.numero_contato = fun.numero_contato;
-                telefone.data_cadastro = DateTime.Now;
+                        EnderecoDTO input = fun.enderecos.SingleOrDefault(x => x.id == end.id_endereco);
+                        end.tipo_endereco = input.tipo_endereco;
+                        end.rua = input.rua;
+                        end.cep = input.cep;
+                        end.bairro = input.bairro;
+                        end.num_endereco = input.num_endereco;
+                        end.cidade = input.cidade;
+                        end.uf_estado = input.uf_estado;
+                        end.data_cadastro = DateTime.Now;
 
-                _db.ContatosFuncionario.Update(telefone);
+                        _db.Enderecos.Update(end);
+                    });
+
+                }
+
+                List<ContatoFuncionario> telefone = await _db.ContatosFuncionario.Where(t => t.funcionario_id == funcionario.id_funcionario).ToListAsync();
+
+                if (telefone.Count == 0 && fun.telefones != null)
+                {
+                    fun.telefones.ForEach(tel =>
+                    {
+                        ContatoFuncionario contato = new ContatoFuncionario();
+                        contato.funcionario_id = funcionario.id_funcionario;
+                        contato.tipo_telefone = tel.tipo_telefone;
+                        contato.numero_contato = tel.numero_contato;
+                        contato.data_cadastro = DateTime.Now;
+
+                        _db.ContatosFuncionario.Add(contato);
+                    });
+                }
+                else if (telefone.Count > 0 && fun.telefones != null)
+                {
+                    telefone.ForEach(tel => 
+                    {
+                        TelefoneDTO input = fun.telefones.SingleOrDefault(x => x.id == tel.id_contato);
+                        tel.tipo_telefone = input.tipo_telefone;
+                        tel.numero_contato = input.numero_contato;
+                        tel.data_cadastro = DateTime.Now;
+
+                        _db.ContatosFuncionario.Update(tel);
+                    });
+                }
+
                 await _db.SaveChangesAsync();
 
                 transaction.Commit();
@@ -392,7 +442,5 @@ namespace ApiPIM.Repository
 
             return lista.ToList();
         }
-
-       
     }
 }

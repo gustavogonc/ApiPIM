@@ -1,4 +1,4 @@
-﻿namespace ApiPIM.Models
+﻿namespace ApiPIM.Models.FuncionarioDTO
 {
     public class FuncionarioDTO
     {

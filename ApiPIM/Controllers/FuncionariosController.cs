@@ -1,5 +1,4 @@
-﻿
-using ApiPIM.Models;
+﻿using ApiPIM.Models.FuncionarioDTO;
 using ApiPIM.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -123,7 +122,7 @@ namespace ApiPIM.Controllers
 
         [HttpPut]
         [Route("atualizaFuncionario/{id:int}")]
-        public async Task<ActionResult> PutAtualizaFuncionario(int id, FuncionarioDTO func)
+        public async Task<ActionResult> PutAtualizaFuncionario(int id, FuncionarioEdicaoDTO func)
         {
             try
             {
