@@ -63,6 +63,7 @@ namespace ApiPIM.Repository
                             f.estado_civil,
                             f.cargo_id,
                             f.cpf,
+                            f.email_usuario,
                             departamento.nome_departamento,
                             cargo.nome_cargo,
                             f.data_contratacao,
@@ -92,7 +93,8 @@ namespace ApiPIM.Repository
                                 departamento = g.First().nome_departamento,
                                 cargo = g.First().nome_cargo,
                                 data_contratacao = g.First().data_contratacao,
-                                cpf = g.First().cpf
+                                cpf = g.First().cpf,
+                                email_usuario = g.First().email_usuario
                             },
                             Enderecos = g
                                 .Where(e => e.rua != null) // Para filtrar possíveis nulls
@@ -199,6 +201,7 @@ namespace ApiPIM.Repository
                             f.estado_civil,
                             f.cargo_id,
                             f.cpf,
+                            f.email_usuario,
                             departamento.nome_departamento,
                             cargo.nome_cargo,
                             f.data_contratacao,
@@ -228,7 +231,8 @@ namespace ApiPIM.Repository
                                 departamento = g.First().nome_departamento,
                                 cargo = g.First().nome_cargo,
                                 data_contratacao = g.First().data_contratacao,
-                                cpf = g.First().cpf
+                                cpf = g.First().cpf,
+                                email_usuario = g.First().email_usuario
                             },
                             Enderecos = g
                                 .Where(e => e.rua != null) // Para filtrar possíveis nulls
@@ -335,6 +339,7 @@ namespace ApiPIM.Repository
                 funcionario.cargo_id = fun.cargo_id;
                 funcionario.data_contratacao = fun.data_contratacao;
                 funcionario.estado_civil = fun.estado_civil;
+                funcionario.email_usuario = fun.email_usuario;
 
                 _db.Funcionarios.Update(funcionario);
 

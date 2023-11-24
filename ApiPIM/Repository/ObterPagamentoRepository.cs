@@ -115,8 +115,8 @@ namespace ApiPIM.Repository
             {
                 string query = @"SELECT d.nome_departamento,
                                    
-                                    SUM(total_liq) AS somatoria_total_liquido
-                                FROM [dbo].[tb_histpagment] h
+                                    SUM(valor_liquido) AS somatoria_total_liquido
+                                FROM [dbo].[tb_valores_pagamento] h
 								inner join tb_funcionarios f on h.id_funcionario = f.id_funcionario
                                 inner join tb_cargos c on f.cargo_id = c.id_cargo
                                 inner join tb_departamento d on c.DepartamentoId = d.id_departamento
