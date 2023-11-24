@@ -1,5 +1,7 @@
 ﻿using ApiPIM.Models;
 using Microsoft.Data.SqlClient;
+using System.Data;
+
 namespace ApiPIM.Repository
 {
     public class ObterPagamentoRepository
@@ -91,7 +93,7 @@ namespace ApiPIM.Repository
                             DashboardModel pagamento = new DashboardModel
                             {
                                 texto = reader.GetString(0),
-                                totalLiq = (float)reader.GetDecimal(1)
+                                totalLiq = (decimal)reader.GetDecimal(1)
                             };
                             pagamentos.Add(pagamento);
                         }
@@ -133,7 +135,7 @@ namespace ApiPIM.Repository
                             DashboardModel pagamentoDep = new DashboardModel
                             {
                                 texto = reader.GetString(0),
-                                totalLiq = (float)reader.GetDouble(1)
+                                totalLiq = reader.GetDecimal(1)
                             };
                             pagamentos.Add(pagamentoDep);
                         }
