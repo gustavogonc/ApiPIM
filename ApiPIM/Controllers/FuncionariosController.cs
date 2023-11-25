@@ -1,4 +1,5 @@
-﻿using ApiPIM.Models.FuncionarioDTO;
+﻿using ApiPIM.Models;
+using ApiPIM.Models.FuncionarioDTO;
 using ApiPIM.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,10 +13,12 @@ namespace ApiPIM.Controllers
     public class FuncionariosController : ControllerBase
     {
         private readonly IFuncionarioRepository _funcionarioRepository;
+        private readonly ICargosRepository _cargosRepository;
 
-        public FuncionariosController(IFuncionarioRepository funcionarioRepository)
+        public FuncionariosController(IFuncionarioRepository funcionarioRepository, ICargosRepository cargosRepository)
         {
-            _funcionarioRepository= funcionarioRepository;
+            _funcionarioRepository = funcionarioRepository;
+            _cargosRepository = cargosRepository;
         }
 
         [HttpGet]
@@ -105,6 +108,13 @@ namespace ApiPIM.Controllers
         {
             try
             {
+                Cargos temCargo = await _cargosRepository.GetCargo(funcionarios.cargo_id);
+
+                if(temCargo == null)
+                {
+                    return NotFound("Cargo não encontrado");
+                }
+
                 bool f = await _funcionarioRepository.NovoFuncionario(funcionarios);
 
                 if (f == false)

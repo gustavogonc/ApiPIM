@@ -276,7 +276,6 @@ namespace ApiPIM.Repository
                     data_contratacao = fun.data_contratacao,
                     estado_civil = fun.estado_civil,
                     email_usuario = fun.email_usuario
-
                 };
 
                 await _db.Funcionarios.AddAsync(funcionario);

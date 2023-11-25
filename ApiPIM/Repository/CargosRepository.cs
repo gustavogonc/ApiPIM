@@ -16,6 +16,12 @@ namespace ApiPIM.Repository
             return await _db.Cargos.ToListAsync();
         }
 
+
+        public async Task<Cargos> GetCargo(int id)
+        {
+            return await _db.Cargos.SingleOrDefaultAsync(c => c.id_cargo == id);
+        }
+
         public async Task<IQueryable> Get(int id)
         {
             var cargo = from c in _db.Cargos
@@ -89,5 +95,6 @@ namespace ApiPIM.Repository
             await _db.SaveChangesAsync();
 
         }
+
     }
 }

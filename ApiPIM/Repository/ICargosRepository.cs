@@ -8,6 +8,7 @@ namespace ApiPIM.Repository
         Task<bool> AtualizaCargo(Cargos cargo);
         Task<List<Cargos>> Get();
         Task<IQueryable> Get(int id);
+        Task<Cargos> GetCargo(int id);
         Task<List<Cargos>> GetComDepartamentos();
         Task DeleteCargo(int id);
     }
